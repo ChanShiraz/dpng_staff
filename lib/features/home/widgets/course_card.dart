@@ -17,7 +17,7 @@ class CourseCard extends StatelessWidget {
         height: 120,
         margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
-          color: course.color,
+          color: Colors.purple.shade300,
           borderRadius: BorderRadius.circular(14),
           boxShadow: const [
             BoxShadow(
@@ -30,10 +30,10 @@ class CourseCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              course.title,
+              course.title1,
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 20,
@@ -41,10 +41,10 @@ class CourseCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              course.schedule,
-              style: const TextStyle(color: Colors.white70),
-            ),
+            // Text(
+            //   'course.schedule',
+            //   style: const TextStyle(color: Colors.white70),
+            // ),
           ],
         ),
       ),
@@ -60,14 +60,19 @@ class CourseCarousel extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 140,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: courses.length,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        itemBuilder: (context, index) {
-          return CourseCard(course: courses[index], highlighted: index == 0);
-        },
-      ),
+      child: courses.isEmpty
+          ? Center(child: Text('No Course Found!'))
+          : ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: courses.length,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              itemBuilder: (context, index) {
+                return CourseCard(
+                  course: courses[index],
+                  highlighted: index == 0,
+                );
+              },
+            ),
     );
   }
 }

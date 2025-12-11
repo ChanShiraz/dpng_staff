@@ -1,6 +1,7 @@
 import 'package:dpng_staff/features/assessment_center/view/assessment_center_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AssessmentCard extends StatelessWidget {
   final String title;
@@ -52,6 +53,51 @@ class AssessmentCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: LinearProgressIndicator(value: progress, minHeight: 10),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AssessmentCardShimmer extends StatelessWidget {
+  const AssessmentCardShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 2,
+        child: Padding(
+          padding: const EdgeInsets.all(18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title skeleton
+              Container(height: 18, width: 180, color: Colors.white),
+              const SizedBox(height: 12),
+
+              // Large number
+              Container(height: 26, width: 100, color: Colors.white),
+              const SizedBox(height: 6),
+
+              // Subtext
+              Container(height: 16, width: 140, color: Colors.white),
+              const SizedBox(height: 12),
+
+              // Progress bar skeleton
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  height: 10,
+                  width: double.infinity,
+                  color: Colors.white,
+                ),
               ),
             ],
           ),

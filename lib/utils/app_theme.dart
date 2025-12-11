@@ -16,6 +16,7 @@ class AppTheme {
     colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
     brightness: Brightness.light,
     inputDecorationTheme: InputDecorationTheme(
+      hintStyle: TextStyle(color: Colors.grey),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
         borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
@@ -23,7 +24,7 @@ class AppTheme {
 
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(color: Colors.grey.shade300, width: 2.0),
+        borderSide: BorderSide(width: 2.0),
       ),
 
       enabledBorder: OutlineInputBorder(
