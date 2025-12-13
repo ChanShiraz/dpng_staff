@@ -1,9 +1,14 @@
 import 'package:dpng_staff/common/round_icon_button.dart';
-import 'package:dpng_staff/features/student_roster/models/summative_work.dart';
-import 'package:dpng_staff/features/student_roster/view/summative_work_page.dart';
-import 'package:dpng_staff/features/student_roster/widgets/summative_grade_widget.dart';
-import 'package:dpng_staff/features/student_roster/widgets/summative_status.dart';
+import 'package:dpng_staff/features/student_summative_work/controller/summative_work_detail_controller.dart';
+import 'package:dpng_staff/features/student_summative_work/models/summative_work.dart';
+import 'package:dpng_staff/features/student_summative_work/view/summative_details_page.dart';
+//import 'package:dpng_staff/features/student_roster/view/summative_work_details_page.dart';
+import 'package:dpng_staff/features/student_summative_work/view/summative_work_page.dart';
+import 'package:dpng_staff/features/student_summative_work/widgets/summative_grade_widget.dart';
+import 'package:dpng_staff/features/student_summative_work/widgets/summative_status.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/utils.dart';
 import 'package:intl/intl.dart';
 
 class SummativeTile extends StatelessWidget {
@@ -44,7 +49,14 @@ class SummativeTile extends StatelessWidget {
             SummativeStatus(status: work.status),
 
             SummativeGradeWidget(grade: work.grade),
-            roundIconButton(Icons.search, () {}),
+            roundIconButton(Icons.search, () {
+              Get.to(
+                SummativeWorkDetailsPage(
+                  subid: work.subid,
+                  summativeTitle: work.title,
+                ),
+              );
+            }),
           ],
         ),
       ),

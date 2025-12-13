@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:dpng_staff/common/round_icon_button.dart';
 import 'package:dpng_staff/features/grades/models/student.dart';
 import 'package:dpng_staff/features/student_roster/models/roster_student.dart';
-import 'package:dpng_staff/features/student_roster/view/summative_work_page.dart';
+import 'package:dpng_staff/features/student_summative_work/view/summative_work_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';

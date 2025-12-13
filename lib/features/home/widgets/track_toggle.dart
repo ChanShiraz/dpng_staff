@@ -1,64 +1,55 @@
-import 'package:dpng_staff/features/home/controller/courses_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:get/state_manager.dart';
 
 class TrackToggle extends StatelessWidget {
-  const TrackToggle({super.key, required this.coursesController});
+  final String selectedTrack;
+  final ValueChanged<String> onChanged;
 
-  final CoursesController coursesController;
+  const TrackToggle({
+    super.key,
+    required this.selectedTrack,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final int courseType = coursesController.courseType.value;
-      return Row(
-        children: [
-          InkWell(
-            onTap: () {
-              coursesController.courseType.value = 4;
-              coursesController.loadCourses(courseType);
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-              decoration: BoxDecoration(
-                color: courseType == 4 ? Colors.blue : null,
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                'TRACK A',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: courseType == 4 ? Colors.white : Colors.black,
-                ),
-              ),
-            ),
-          ),
-          SizedBox(width: 10),
-          InkWell(
-            onTap: () {
-              coursesController.courseType.value = 5;
-              coursesController.loadCourses(courseType);
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-              decoration: BoxDecoration(
-                color: courseType == 5 ? Colors.blue : null,
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                'TRACK B',
-                style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: courseType == 5 ? Colors.white : Colors.black,
-                ),
-              ),
-            ),
-          ),
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        border: Border.all(color: Colors.grey.shade300),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 6),
         ],
-      );
-    });
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [_toggleButton("A"), _toggleButton("B")],
+      ),
+    );
+  }
+
+  Widget _toggleButton(String value) {
+    final bool isActive = selectedTrack == value;
+
+    return GestureDetector(
+      onTap: () => onChanged(value),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+        decoration: BoxDecoration(
+          color: isActive ? Colors.blue.shade600 : Colors.transparent,
+          borderRadius: BorderRadius.circular(24),
+        ),
+        child: Text(
+          "Track $value",
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: isActive ? Colors.white : Colors.blue.shade600,
+          ),
+        ),
+      ),
+    );
   }
 }

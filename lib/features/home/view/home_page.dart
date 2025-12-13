@@ -29,10 +29,11 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     ever(userController.isLoading, (loading) {
       if (loading == false && userController.currentUser.value != null) {
-        final ly = userController.learningYear.value;
-        coursesController.loadCourses(ly);
+        //final ly = userController.learningYear.value;
+        coursesController.loadCourses(coursesController.courseType.value);
         summativeController.calWeekProgress();
         formativeController.calWeekProgress();
+        //coursesController.loadSummativeBubbles();
         //summativeController.calWeekProgress();
       }
     });
@@ -63,7 +64,21 @@ class HomePage extends StatelessWidget {
                                 children: [
                                   const SizedBox(width: 6),
                                   TrackToggle(
-                                    coursesController: coursesController,
+                                    selectedTrack:
+                                        coursesController.courseType.value == 4
+                                        ? 'A'
+                                        : 'B',
+                                    onChanged: (String value) {
+                                      if (value.contains('A')) {
+                                        coursesController.courseType.value = 4;
+                                      } else {
+                                        coursesController.courseType.value = 5;
+                                      }
+                                      coursesController.loadCourses(
+                                        coursesController.courseType.value,
+                                      );
+                                    },
+                                    //coursesController: coursesController,
                                   ),
                                   const Spacer(),
                                   Container(
@@ -129,8 +144,11 @@ class HomePage extends StatelessWidget {
                                                 : AssessmentCard(
                                                     title:
                                                         'Weekly Formative Assessment Overview',
-                                                    toGrade: formativeController.y-formativeController.x,
-                                                    submissions: formativeController.x,
+                                                    toGrade:
+                                                        formativeController.y -
+                                                        formativeController.x,
+                                                    submissions:
+                                                        formativeController.x,
                                                     total:
                                                         formativeController.y,
                                                   ),

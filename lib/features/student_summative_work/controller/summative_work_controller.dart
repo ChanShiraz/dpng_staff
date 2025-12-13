@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:dpng_staff/features/student_roster/models/summative_work.dart';
+import 'package:dpng_staff/features/student_summative_work/models/summative_work.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -17,7 +17,7 @@ class SummativeWorkController extends GetxController {
     try {
       final query = supbase
           .from('summative_student_submissions')
-          .select('date,status,grade,assessed,alt_mod_summatives(title)')
+          .select('subid,date,status,grade,assessed,alt_mod_summatives(title)')
           .eq('userid', studentId)
           .eq('a_cid', courseId)
           .order('date');

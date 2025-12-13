@@ -1,10 +1,10 @@
 import 'package:dpng_staff/common/top_bar.dart';
 import 'package:dpng_staff/features/assess_formative/widgets/topbar.dart';
-import 'package:dpng_staff/features/student_roster/controllers/summative_work_controller.dart';
+import 'package:dpng_staff/features/student_summative_work/controller/summative_work_controller.dart';
 import 'package:dpng_staff/features/student_roster/widgets/roster_table.dart';
 import 'package:dpng_staff/features/student_roster/widgets/student_tile.dart';
-import 'package:dpng_staff/features/student_roster/widgets/summative_header.dart';
-import 'package:dpng_staff/features/student_roster/widgets/summative_tile.dart';
+import 'package:dpng_staff/features/student_summative_work/widgets/summative_header.dart';
+import 'package:dpng_staff/features/student_summative_work/widgets/summative_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

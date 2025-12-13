@@ -10,7 +10,7 @@ class CourseCardShimmer extends StatelessWidget {
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
       child: Container(
-        width: 260,
+        width: 320,
         height: 120,
         margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
@@ -37,7 +37,7 @@ class CourseCarouselShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 140,
+      height: 210,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: 5,

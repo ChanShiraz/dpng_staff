@@ -2,16 +2,26 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:dpng_staff/features/home/models/summative_bubble_counts.dart';
+
 class CourseModel {
   final int a_cid;
   final int cid;
   final int ccid;
   final String title1;
+  final String color;
+  final String category;
+  SummativeBubbleCounts summativeBubbleCounts;
+  SummativeBubbleCounts formativeBubbleCounts;
   CourseModel({
     required this.a_cid,
     required this.cid,
     required this.ccid,
     required this.title1,
+    required this.color,
+    required this.category,
+    required this.summativeBubbleCounts,
+    required this.formativeBubbleCounts,
   });
 
   Map<String, dynamic> toMap() {
@@ -23,12 +33,24 @@ class CourseModel {
     };
   }
 
-  factory CourseModel.fromMap(Map<String, dynamic> map) {
+  factory CourseModel.fromMap(
+    Map<String, dynamic> map,
+    SummativeBubbleCounts summativeBubbleCounts,
+    SummativeBubbleCounts formativeBubbleCounts,
+  ) {
+    final categoryTable = map['course_content_category'];
+
     return CourseModel(
       a_cid: map['a_cid'] as int,
       cid: map['cid'] as int,
       ccid: map['ccid'] as int,
       title1: map['title1'] as String,
+      color: categoryTable != null
+          ? categoryTable['color'] as String
+          : '#CCCCCC',
+      category: categoryTable != null ? categoryTable['cc_category'] : '',
+      summativeBubbleCounts: summativeBubbleCounts,
+      formativeBubbleCounts: formativeBubbleCounts,
     );
   }
 }

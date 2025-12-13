@@ -3,52 +3,126 @@ import 'package:dpng_staff/features/home/models/course_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
-class CourseCard extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'circular_progress.dart';
+import 'bubble_row.dart';
+
+class CourseTile extends StatelessWidget {
   final CourseModel course;
-  final bool highlighted;
-  const CourseCard({super.key, required this.course, this.highlighted = false});
+
+  final Color completionColor;
+
+  const CourseTile({
+    super.key,
+    required this.completionColor,
+    required this.course,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => Get.to(CourseOverviewPage()),
-      child: Container(
-        width: 260,
-        height: 120,
-        margin: const EdgeInsets.only(right: 16),
-        decoration: BoxDecoration(
-          color: Colors.purple.shade300,
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: const [
-            BoxShadow(
-              color: Color(0x11000000),
-              blurRadius: 8,
-              offset: Offset(0, 6),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              course.title1,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 5),
+      child: InkWell(
+        onTap: () => Get.to(CourseOverviewPage()),
+        child: Container(
+          width: 320,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.06),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
               ),
-            ),
-            const SizedBox(height: 8),
-            // Text(
-            //   'course.schedule',
-            //   style: const TextStyle(color: Colors.white70),
-            // ),
-          ],
+            ],
+          ),
+          child: Column(
+            children: [
+              /// Header
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: hexToColor(course.color),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(16),
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          course.category.toUpperCase(),
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 11,
+                            letterSpacing: 0.8,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        SizedBox(
+                          width: 120,
+                          child: Text(
+                            course.title1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(width: 85),
+                    CircularProgress(percent: 40, color: Colors.red),
+                  ],
+                ),
+              ),
+
+              /// Content
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade200),
+                  ),
+                  child: Column(
+                    children: [
+                      BubbleRow(
+                        label: "Summative",
+                        bubbleCounts: course.summativeBubbleCounts,
+                      ),
+                      Divider(height: 16),
+                      BubbleRow(
+                        label: "Formative ",
+                        bubbleCounts: course.formativeBubbleCounts,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  Color hexToColor(String hex) {
+    hex = hex.replaceAll('#', '');
+
+    if (hex.length == 6) {
+      hex = 'FF$hex'; // add alpha if missing
+    }
+
+    return Color(int.parse(hex, radix: 16));
   }
 }
 
@@ -59,7 +133,7 @@ class CourseCarousel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 140,
+      height: 210,
       child: courses.isEmpty
           ? Center(child: Text('No Course Found!'))
           : ListView.builder(
@@ -67,10 +141,14 @@ class CourseCarousel extends StatelessWidget {
               itemCount: courses.length,
               padding: const EdgeInsets.symmetric(horizontal: 8),
               itemBuilder: (context, index) {
-                return CourseCard(
+                return CourseTile(
                   course: courses[index],
-                  highlighted: index == 0,
+                  completionColor: Colors.white12,
                 );
+                // CourseCard(
+                //   course: courses[index],
+                //   highlighted: index == 0,
+                // );
               },
             ),
     );

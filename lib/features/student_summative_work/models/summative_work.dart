@@ -2,12 +2,14 @@
 import 'dart:convert';
 
 class SummativeWork {
+  final int subid;
   final String title;
   final DateTime date;
   final int status;
   final int grade;
   final DateTime assessed;
   SummativeWork({
+    required this.subid,
     required this.title,
     required this.date,
     required this.status,
@@ -17,6 +19,7 @@ class SummativeWork {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'subid': subid,
       'title': title,
       'date': date.millisecondsSinceEpoch,
       'status': status,
@@ -27,6 +30,7 @@ class SummativeWork {
 
   factory SummativeWork.fromMap(Map<String, dynamic> map) {
     return SummativeWork(
+      subid: map['subid'] as int,
       title: map['alt_mod_summatives']['title'] as String,
       date: DateTime.parse(map['date']),
       status: map['status'] as int,
