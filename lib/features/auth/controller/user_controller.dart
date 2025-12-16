@@ -1,4 +1,5 @@
 import 'package:dpng_staff/features/auth/models/user_model.dart';
+import 'package:dpng_staff/features/auth/view/login_page.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -53,5 +54,8 @@ class UserController extends GetxController {
   void logout() {
     currentUser.value = null;
     box.remove('user');
+    Get.deleteAll();
+
+    Get.offAll(LoginPage());
   }
 }

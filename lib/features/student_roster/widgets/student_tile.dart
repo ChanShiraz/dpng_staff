@@ -82,7 +82,8 @@ class StudentTile extends StatelessWidget {
 }
 
 class StudentRosterShimmer extends StatelessWidget {
-  const StudentRosterShimmer({super.key});
+  const StudentRosterShimmer({super.key,this.qty =10});
+  final int qty;
 
   @override
   Widget build(BuildContext context) {
@@ -104,12 +105,12 @@ class StudentRosterShimmer extends StatelessWidget {
             ),
             child: Row(
               children: const [
-                Expanded(flex: 2, child: _ShimmerBox(width: 80, height: 12)),
-                Expanded(flex: 2, child: _ShimmerBox(width: 100, height: 12)),
+                Expanded(flex: 2, child: ShimmerBox(width: 80, height: 12)),
+                Expanded(flex: 2, child: ShimmerBox(width: 100, height: 12)),
                 Expanded(
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: _ShimmerBox(width: 60, height: 12),
+                    child: ShimmerBox(width: 60, height: 12),
                   ),
                 ),
               ],
@@ -119,7 +120,7 @@ class StudentRosterShimmer extends StatelessWidget {
           const SizedBox(height: 6),
 
           // LIST ROW SHIMMERS (10 rows)
-          ...List.generate(10, (index) {
+          ...List.generate(qty, (index) {
             final bg = index.isEven ? Colors.white : const Color(0xfff8fafc);
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -130,8 +131,8 @@ class StudentRosterShimmer extends StatelessWidget {
               margin: const EdgeInsets.only(bottom: 4),
               child: Row(
                 children: [
-                  const Expanded(flex: 2, child: _ShimmerBox(height: 14)),
-                  const Expanded(flex: 2, child: _ShimmerBox(height: 14)),
+                  const Expanded(flex: 2, child: ShimmerBox(height: 14)),
+                  const Expanded(flex: 2, child: ShimmerBox(height: 14)),
                   Expanded(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -147,7 +148,7 @@ class StudentRosterShimmer extends StatelessWidget {
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(30),
                             ),
-                            child: const _ShimmerBox(height: 16, width: 16),
+                            child: const ShimmerBox(height: 16, width: 16),
                           ),
                         ),
                       ),
@@ -164,11 +165,11 @@ class StudentRosterShimmer extends StatelessWidget {
 }
 
 /// SHIMMER BOX WIDGET
-class _ShimmerBox extends StatelessWidget {
+class ShimmerBox extends StatelessWidget {
   final double? width;
   final double height;
 
-  const _ShimmerBox({super.key, this.width, this.height = 14});
+  const ShimmerBox({super.key, this.width, this.height = 14});
 
   @override
   Widget build(BuildContext context) {

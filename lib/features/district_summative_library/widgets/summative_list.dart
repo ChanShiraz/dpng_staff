@@ -19,8 +19,9 @@ class SummativeList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.white,
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(8),
       child: RoundContainer(
+        circular: 20,
         child: Column(
           children: [
             _buildHeader(),
@@ -52,7 +53,7 @@ class SummativeList extends StatelessWidget {
           Expanded(
             flex: 3,
             child: Text(
-              'Title / Course',
+              'Summative Title',
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
           ),
@@ -63,17 +64,18 @@ class SummativeList extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
           ),
+
           Expanded(
             flex: 3,
             child: Text(
-              'Standards',
+              'Competencies',
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
           ),
           Expanded(
             flex: 3,
             child: Text(
-              'Competencies',
+              'Standards',
               style: TextStyle(fontWeight: FontWeight.w500),
             ),
           ),

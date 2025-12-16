@@ -7,16 +7,23 @@ class TagChip extends StatelessWidget {
     super.key,
     this.color = const Color(0xFFF1F5F9),
     this.textColor = const Color(0xFF475569),
+    this.showBorder = false,
+    this.borderColor,
   });
   final Color color;
   final Color textColor;
+  final bool showBorder;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(right: 4, bottom: 4),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
+        border: showBorder
+            ? BoxBorder.all(color: borderColor ?? Colors.grey.shade50)
+            : null,
         color: color,
         borderRadius: BorderRadius.circular(12),
       ),

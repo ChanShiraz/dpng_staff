@@ -19,7 +19,7 @@ class SummativeLibraryPage extends StatelessWidget {
         child: Column(
           children: [
             _buildTopBar(),
-            Expanded(child: const SummativeTable()),
+            Expanded(child: SummativeTable()),
           ],
         ),
       ),

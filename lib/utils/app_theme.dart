@@ -18,23 +18,23 @@ class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: TextStyle(color: Colors.grey),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(15),
         borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
       ),
 
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(15),
         borderSide: BorderSide(width: 2.0),
       ),
 
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(15),
         borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
       ),
 
       // Error Border (When errorText is provided)
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(15),
         borderSide: const BorderSide(
           color: Colors.red, // <-- Standard color for errors
           width: 1.0,
@@ -65,6 +65,11 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadiusGeometry.circular(15),
         ),
+      ),
+    ),
+    chipTheme: ChipThemeData(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.circular(20),
       ),
     ),
   );

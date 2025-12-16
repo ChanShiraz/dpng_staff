@@ -1,3 +1,5 @@
+import 'package:dpng_staff/common/top_bar.dart';
+import 'package:dpng_staff/features/assess_formative/widgets/topbar.dart';
 import 'package:dpng_staff/features/rubric_creation/controller/rubric_controller.dart';
 import 'package:dpng_staff/features/rubric_creation/steps/step1_basics.dart';
 import 'package:dpng_staff/features/rubric_creation/steps/step2_additional_scopes.dart';
@@ -10,10 +12,22 @@ import 'package:dpng_staff/features/summative_creation/widgets/progress_bar.dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class RubricCreationPage extends StatelessWidget {
-  final RubricController c = Get.put(RubricController());
+class RubricCreationPage extends StatefulWidget {
+  const RubricCreationPage({super.key});
 
-  RubricCreationPage({super.key});
+  @override
+  State<RubricCreationPage> createState() => _RubricCreationPageState();
+}
+
+class _RubricCreationPageState extends State<RubricCreationPage> {
+  late RubricController c;
+  @override
+  void initState() {
+    c = Get.put(RubricController());
+    c.fetchCategories();
+    c.step1ExController.expand();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,59 +44,83 @@ class RubricCreationPage extends StatelessWidget {
                   () => Column(
                     children: [
                       SectionCard(
+                        expansibleController: c.step1ExController,
                         index: 1,
                         title: "Step 1 — Basics",
                         subtitle: "Enter title and choose main scope",
-                        completed: c.step1Complete,
+                        completed: c.step1Complete.value,
                         locked: false,
-                        onNext: c.step1Complete
-                            ? () => c.openStep.value = 2
+                        onNext: c.step1Complete.value
+                            ? () {
+                                c.openStep.value = 2;
+
+                                c.step2ExController.expand();
+                                c.step2Complete.value = true;
+                              }
                             : null,
                         child: Step1Basics(),
                       ),
                       SectionCard(
+                        expansibleController: c.step2ExController,
                         index: 2,
                         title: "Step 2 — Additional Scopes",
                         subtitle:
                             "(Optional) Select any additional scopes that this rubric will integrate.",
-                        completed: c.additionalScopes.isNotEmpty,
-                        locked: !c.step1Complete,
+                        completed: c.additionalSelectedScopes.isNotEmpty,
+                        locked: !c.step1Complete.value,
                         child: Step2AdditionalScopes(),
                         onBack: () => c.openStep.value = 1,
-                        onNext: () => c.openStep.value = 3,
+                        onNext: () {
+                          c.openStep.value = 3;
+                          c.step3ExController.expand();
+                        },
                       ),
                       SectionCard(
+                        expansibleController: c.step3ExController,
                         index: 3,
                         title: "Step 3 — Choose DP Competencies",
                         subtitle:
                             "Pick one or more competencies from each relevant scope (use the tabs).",
-                        completed: c.step3Complete,
-                        locked: !c.step1Complete,
+                        completed: c.step3Complete.value,
+                        locked: !c.step1Complete.value,
                         onBack: () => c.openStep.value = 2,
-                        onNext: c.step3Complete
-                            ? () => c.openStep.value = 4
+                        onNext: c.step3Complete.value
+                            ? () {
+                                c.openStep.value = 4;
+                                c.step4ExController.expand();
+                              }
                             : null,
-                        child: Step3Competencies(rubricRows: c.rubricRows),
+                        child: Step3Competencies(),
+                      ),
+                      Obx(
+                        () => SectionCard(
+                          expansibleController: c.step4ExController,
+                          index: 4,
+                          title: "Step 4 — Standards",
+                          subtitle: "Select related standards",
+                          completed: c.step4Complete.value,
+                          locked: !c.step3Complete.value,
+                          onBack: () => c.openStep.value = 3,
+                          onNext: c.step4Complete.value
+                              ? () {
+                                  c.openStep.value = 5;
+                                  c.step5ExController.expand();
+                                  c.step5Ready.value = true;
+                                }
+                              : null,
+                          child: (c.selectedCategory.value?.ccid ?? 0) != 4
+                              ? Step4Standards()
+                              : Step4ScienceStandards(),
+                        ),
                       ),
                       SectionCard(
-                        index: 4,
-                        title: "Step 4 — Standards",
-                        subtitle: "Select related standards",
-                        completed: c.step4Complete,
-                        locked: !c.step3Complete,
-                        onBack: () => c.openStep.value = 3,
-                        onNext: c.step4Complete
-                            ? () => c.openStep.value = 5
-                            : null,
-                        child: Step4Standards(rubricRows: c.rubricRows),
-                      ),
-                      SectionCard(
+                        expansibleController: c.step5ExController,
                         index: 5,
                         title: "Step 5 — Write Rubric Language by Level",
                         subtitle:
                             "Draft the integrated rubric text for each proficiency level (Metacognition replaces Advanced).",
-                        completed: c.step5Ready,
-                        locked: !c.step4Complete,
+                        completed: c.step5Ready.value,
+                        locked: !c.step4Complete.value,
                         child: Step5RubricLevels(),
                         onBack: () => c.openStep.value = 4,
                       ),
@@ -109,83 +147,72 @@ class _Header extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () => Get.back(),
-                      icon: Icon(Icons.arrow_back_ios_new),
-                    ),
-                    SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text(
-                          "Build Integrated Rubric",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "Follow steps in order; each unlocks the next",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    OutlinedButton(onPressed: () {}, child: Text('Step 1')),
-                    SizedBox(width: 8),
-                    OutlinedButton(onPressed: () {}, child: Text('Step 2')),
-                    SizedBox(width: 8),
-                    OutlinedButton(onPressed: () {}, child: Text('Step 3')),
-                    SizedBox(width: 8),
-                    OutlinedButton(onPressed: () {}, child: Text('Step 4')),
-                    SizedBox(width: 8),
-                    OutlinedButton(onPressed: () {}, child: Text('Step 5')),
-                  ],
-                ),
-              ],
+            child: TopBar(
+              type: 2,
+              title: 'Build Integrated Rubric',
+              subtitle: 'Follow steps in order; each unlocks the ne',
+              // trailing: Row(
+              //   children: [
+              //     OutlinedButton(onPressed: () {}, child: Text('Step 1')),
+              //     SizedBox(width: 8),
+              //     OutlinedButton(onPressed: () {}, child: Text('Step 2')),
+              //     SizedBox(width: 8),
+              //     OutlinedButton(onPressed: () {}, child: Text('Step 3')),
+              //     SizedBox(width: 8),
+              //     OutlinedButton(onPressed: () {}, child: Text('Step 4')),
+              //     SizedBox(width: 8),
+              //     OutlinedButton(onPressed: () {}, child: Text('Step 5')),
+              //   ],
+              // ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: ProgressStepper(
-              steps: [
-                StepData(
-                  stepNumber: 1,
-                  title: 'Basic',
-                  subtitle: 'Title Main',
-                  status: c.step1Complete
-                      ? StepStatus.completed
-                      : StepStatus.active,
-                ),
-                StepData(
-                  stepNumber: 2,
-                  title: 'More Scopes',
-                  subtitle: 'Additional Alignments',
-                ),
-                StepData(
-                  stepNumber: 3,
-                  title: 'Competencies',
-                  subtitle: 'Pick by Scope Tabs',
-                ),
-                StepData(
-                  stepNumber: 4,
-                  title: 'Standards',
-                  subtitle: 'Select CCSS/State',
-                ),
-                StepData(
-                  stepNumber: 5,
-                  title: 'Rubric Levels',
-                  subtitle: 'Write E/C/B/P/M',
-                ),
-              ],
+            child: Obx(
+              () => ProgressStepper(
+                steps: [
+                  StepData(
+                    stepNumber: 1,
+                    title: 'Basic',
+                    subtitle: 'Title Main',
+                    status: c.step1Complete.value
+                        ? StepStatus.completed
+                        : StepStatus.active,
+                  ),
+                  StepData(
+                    stepNumber: 2,
+                    title: 'More Scopes',
+                    subtitle: 'Additional Alignments',
+                    status: c.step2Complete.value
+                        ? StepStatus.completed
+                        : StepStatus.active,
+                  ),
+                  StepData(
+                    stepNumber: 3,
+                    title: 'Competencies',
+                    subtitle: 'Pick by Scope Tabs',
+                    status: c.step3Complete.value
+                        ? StepStatus.completed
+                        : StepStatus.active,
+                  ),
+                  StepData(
+                    stepNumber: 4,
+                    title: 'Standards',
+                    subtitle: 'Select CCSS/State',
+                    status: c.step4Complete.value
+                        ? StepStatus.completed
+                        : StepStatus.active,
+                  ),
+                  StepData(
+                    stepNumber: 5,
+                    title: 'Rubric Levels',
+                    subtitle: 'Write E/C/B/P/M',
+                    status: c.step5Ready.value
+                        ? StepStatus.completed
+                        : StepStatus.active,
+                  ),
+                ],
+              ),
             ),
           ),
           SizedBox(height: 10),

@@ -6,11 +6,11 @@ import 'summative_row.dart';
 import 'package:collection/collection.dart';
 
 class SummativeTable extends StatelessWidget {
-  const SummativeTable({super.key});
-
+   SummativeTable({super.key});
+  final SummativeLibraryController controller  = Get.put(SummativeLibraryController());
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<SummativeLibraryController>();
+   
 
     return Obx(() {
       final data = controller.summatives;

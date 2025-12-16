@@ -1,7 +1,9 @@
+import 'package:dpng_staff/features/home/models/course_model.dart';
 import 'package:flutter/material.dart';
 
 class CourseHeaderCard extends StatelessWidget {
-  const CourseHeaderCard({super.key});
+  const CourseHeaderCard({super.key, required this.course});
+  final CourseModel course;
 
   @override
   Widget build(BuildContext context) {
@@ -17,20 +19,23 @@ class CourseHeaderCard extends StatelessWidget {
             Wrap(
               spacing: 8,
               children: [
-                Chip(label: const Text('Track A')),
-                Chip(label: const Text('Economics')),
+                Chip(
+                  label: Text(
+                    course.course_type == 4 ? 'Track A' : 'Track B',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Colors.black,
+                ),
+                Chip(label: Text(course.category)),
               ],
             ),
             const SizedBox(height: 12),
-            const Text(
-              'Economics – Course Overview',
+            Text(
+              '${course.title1} – Course Overview',
               style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'A one-semester course designed to help students become responsible decision makers as they are exposed to economic issues at the personal, local, national, and international levels. Emphasis on practical application as it relates to the consumer across five basic economic units.',
-              style: TextStyle(color: Colors.black54),
-            ),
+            Text(course.overview1, style: TextStyle(color: Colors.black54)),
 
             const SizedBox(height: 16),
             Row(

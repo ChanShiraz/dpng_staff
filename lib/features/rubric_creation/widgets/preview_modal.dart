@@ -12,33 +12,37 @@ void showRubricPreview(BuildContext context) {
       content: SizedBox(
         width: 600,
         height: 400,
-        child: Obx(() => SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Title: ${c.rubricTitle.value}",
-                      style: const TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  Text("Main Scope: ${c.mainScope.value}"),
-                  const SizedBox(height: 8),
-                  Text("Additional Scopes: ${c.additionalScopes.join(", ")}"),
-                  const Divider(),
-                  const Text("Competencies:"),
-                  ...c.selectedCompetencies.map((e) => Text("- ${e['name']}")),
-                  const Divider(),
-                  const Text("Standards:"),
-                  ...c.selectedStandards.map((e) => Text("- ${e['label']}")),
-                  const Divider(),
-                  const Text("Rubric Levels:"),
-                  ...c.levels.map(
-                    (lvl) => Padding(
-                      padding: const EdgeInsets.only(top: 6),
-                      child: Text("$lvl: ${c.rubricText[lvl]}"),
-                    ),
+        child: Obx(
+          () => SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Title: ${c.rubricTitle.value}",
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text("Main Scope: ${c.selectedCategory.value!.title}"),
+                const SizedBox(height: 8),
+                //Text("Additional Scopes: ${c.additionalScopes.join(", ")}"),
+                const Divider(),
+                const Text("Competencies:"),
+                //  ...c.selectedCompetencies.map((e) => Text("- ${e['name']}")),
+                const Divider(),
+                const Text("Standards:"),
+               // ...c.selectedStandards.map((e) => Text("- ${e['label']}")),
+                const Divider(),
+                const Text("Rubric Levels:"),
+                ...c.levels.map(
+                  (lvl) => Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Text("$lvl: ${c.rubricText[lvl]}"),
                   ),
-                ],
-              ),
-            )),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       actions: [
         TextButton(onPressed: () => Get.back(), child: const Text("Close")),

@@ -31,25 +31,32 @@ class SummativeCard extends StatelessWidget {
             // Title + tags
             Expanded(
               flex: 3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Wrap(children: item.tags.map((t) => TagChip(t)).toList()),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${item.author} • ${item.grade}',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                ],
+              child: Text(
+                item.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                ),
               ),
+              // Column(
+              //   crossAxisAlignment: CrossAxisAlignment.start,
+              //   children: [
+              //     Text(
+              //       item.title,
+              //       style: const TextStyle(
+              //         fontWeight: FontWeight.w500,
+              //         fontSize: 14,
+              //       ),
+              //     ),
+              //     const SizedBox(height: 4),
+              //     Wrap(children: item.tags.map((t) => TagChip(t)).toList()),
+              //     const SizedBox(height: 2),
+              //     Text(
+              //       '${item.author} • ${item.grade}',
+              //       style: const TextStyle(fontSize: 12, color: Colors.grey),
+              //     ),
+              //   ],
+              // ),
             ),
 
             // Subject
@@ -65,7 +72,15 @@ class SummativeCard extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Wrap(
-                children: item.standards.map((t) => TagChip(t)).toList(),
+                children: item.standards
+                    .map(
+                      (t) => TagChip(
+                        t,
+                        showBorder: true,
+                        borderColor: Colors.grey.shade300,
+                      ),
+                    )
+                    .toList(),
               ),
             ),
 
@@ -73,19 +88,35 @@ class SummativeCard extends StatelessWidget {
             Expanded(
               flex: 3,
               child: Wrap(
-                children: item.competencies.map((t) => TagChip(t)).toList(),
+                children: item.competencies
+                    .map(
+                      (t) => TagChip(
+                        t,
+
+                        color: Colors.blue.shade50,
+                        textColor: Colors.blue,
+                        showBorder: true,
+                        borderColor: Colors.blue.shade300,
+                      ),
+                    )
+                    .toList(),
               ),
             ),
 
             // Actions
             SizedBox(
-              width: 80,
+              // width: 80,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: const [
                   Icon(Icons.remove_red_eye_outlined, size: 18),
+
                   SizedBox(width: 8),
-                  Icon(Icons.link, size: 18),
+                  Icon(Icons.edit, size: 18),
+                  SizedBox(width: 8),
+                  Icon(Icons.copy, size: 18),
+                  SizedBox(width: 8),
+                  Icon(Icons.delete_outline, size: 18, color: Colors.red),
                 ],
               ),
             ),

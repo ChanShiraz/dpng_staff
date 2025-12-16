@@ -23,7 +23,7 @@ class CourseTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: InkWell(
-        onTap: () => Get.to(CourseOverviewPage()),
+        onTap: () => Get.to(CourseOverviewPage(course: course)),
         child: Container(
           width: 320,
           decoration: BoxDecoration(
@@ -79,7 +79,7 @@ class CourseTile extends StatelessWidget {
                       ],
                     ),
                     SizedBox(width: 85),
-                    CircularProgress(percent: 40, color: Colors.red),
+                    CircularProgress(percent: 0, color: Colors.red),
                   ],
                 ),
               ),

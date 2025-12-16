@@ -1,6 +1,9 @@
 import 'package:dpng_staff/features/%20district_rubric_library/pages/district_rubric_library_page.dart';
+import 'package:dpng_staff/features/auth/controller/user_controller.dart';
+import 'package:dpng_staff/features/auth/widgets/logout_dialog.dart';
 import 'package:dpng_staff/features/district_summative_library/view/district_summative_library_page.dart';
 import 'package:dpng_staff/features/grades/pages/grades_page.dart';
+import 'package:dpng_staff/features/lesson_builder/view/lesson_builder_page.dart';
 import 'package:dpng_staff/features/rubric_creation/view/rubric_creation_page.dart';
 import 'package:dpng_staff/features/student_roster/view/student_roster_page.dart';
 import 'package:dpng_staff/features/summative_creation/view/summative_creation_page.dart';
@@ -21,90 +24,114 @@ class Sidebar extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 10),
       //width: width,
       color: const Color(0xFF1E88E5), // blue stripe like the design
-      child: Column(
-        children: [
-          SizedBox(height: 18),
-          // Logo
-          Padding(
-            padding: const EdgeInsets.all(6.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                color: Colors.white,
-                width: 56,
-                height: 56,
-                child: Image.asset(
-                  'assets/images/icon.png',
-                  fit: BoxFit.contain,
+      child: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height,
+          ),
+          child: Column(
+            children: [
+              SizedBox(height: 18),
+              // Logo
+              Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    color: Colors.white,
+                    width: 56,
+                    height: 56,
+                    child: Image.asset(
+                      'assets/images/icon.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              const SizedBox(height: 12),
+              // Navigation icons
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _SidebarIcon(icon: Icons.home, lable: 'Home'),
+                  // SizedBox(height: 16),
+                  // _SidebarIcon(icon: Icons.menu_book, lable: 'Home'),
+                  SizedBox(height: 16),
+                  _SidebarIcon(icon: Icons.message, lable: 'Chat'),
+                  SizedBox(height: 16),
+                  _SidebarIcon(
+                    icon: Icons.rocket,
+                    lable: 'Student Roasters',
+                    onTap: () => Get.to(StudentRosterPage()),
+                  ),
+                  // SizedBox(height: 16),
+                  // _SidebarIcon(
+                  //   icon: Icons.build_circle_outlined,
+                  //   lable: 'Lesson Builder',
+                  //   onTap: () => Get.to(LessonBuilderPage()),
+                  // ),
+                  SizedBox(height: 16),
+                  _SidebarIcon(
+                    icon: Icons.add_chart_outlined,
+                    lable: 'Add Summatives',
+                    onTap: () => Get.to(SummativeCreationSingleView()),
+                  ),
+                  SizedBox(height: 16),
+                  _SidebarIcon(
+                    icon: Icons.add_moderator_outlined,
+                    lable: 'Integrated Rubric',
+                    onTap: () => Get.to(RubricCreationPage()),
+                  ),
+                  SizedBox(height: 16),
+                  _SidebarIcon(
+                    icon: Icons.local_library_outlined,
+                    lable: 'Summatives Library',
+                    onTap: () => Get.to(DistrictSummativeLibraryPage()),
+                  ),
+                  SizedBox(height: 16),
+                  _SidebarIcon(
+                    lable: 'Rubric Library',
+                    icon: Icons.library_books,
+                    onTap: () => Get.to(DistrictRubricLibraryPage()),
+                  ),
+                  // SizedBox(height: 16),
+                  // _SidebarIcon(
+                  //   lable: 'Summative Library',
+                  //   icon: Icons.local_library_outlined,
+                  //   onTap: () => Get.to(SummativeLibraryPage()),
+                  // ),
+                  SizedBox(height: 16),
+                  _SidebarIcon(
+                    lable: 'Grades Interface',
+                    icon: Icons.grade_outlined,
+                    onTap: () => Get.to(GradesInterface()),
+                  ),
+                  SizedBox(height: 16),
+                  _SidebarIcon(
+                    lable: 'War Report',
+                    icon: Icons.assignment_add,
+                    onTap: () => Get.to(WarReportPage1()),
+                  ),
+                  SizedBox(height: 16),
+                  _SidebarIcon(
+                    lable: 'Log Out',
+                    icon: Icons.logout,
+                    onTap: () {
+                      //Get.find<UserController>().logout();
+                      showDialog(
+                        context: context,
+                        barrierDismissible: true,
+                        builder: (_) => const LogoutDialog(),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 18),
+            ],
           ),
-          const SizedBox(height: 12),
-          // Navigation icons
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _SidebarIcon(icon: Icons.home, lable: 'Home'),
-                // SizedBox(height: 16),
-                // _SidebarIcon(icon: Icons.menu_book, lable: 'Home'),
-                SizedBox(height: 16),
-                _SidebarIcon(icon: Icons.message, lable: 'Chat'),
-                SizedBox(height: 16),
-                _SidebarIcon(
-                  icon: Icons.rocket,
-                  lable: 'Student Roasters',
-                  onTap: () => Get.to(StudentRosterPage()),
-                ),
-                SizedBox(height: 16),
-                _SidebarIcon(
-                  icon: Icons.add_chart_outlined,
-                  lable: 'Add Summatives',
-                  onTap: () => Get.to(SummativeCreationSingleView()),
-                ),
-                SizedBox(height: 16),
-                _SidebarIcon(
-                  icon: Icons.add_moderator_outlined,
-                  lable: 'Integrated Rubric',
-                  onTap: () => Get.to(RubricCreationPage()),
-                ),
-                SizedBox(height: 16),
-                _SidebarIcon(
-                  icon: Icons.library_add,
-                  lable: 'District Summatives',
-                  onTap: () => Get.to(DistrictSummativeLibraryPage()),
-                ),
-                SizedBox(height: 16),
-                _SidebarIcon(
-                  lable: 'District Rubric',
-                  icon: Icons.library_books,
-                  onTap: () => Get.to(DistrictRubricLibraryPage()),
-                ),
-                SizedBox(height: 16),
-                _SidebarIcon(
-                  lable: 'Summative Library',
-                  icon: Icons.local_library_outlined,
-                  onTap: () => Get.to(SummativeLibraryPage()),
-                ),
-                SizedBox(height: 16),
-                _SidebarIcon(
-                  lable: 'Grades Interface',
-                  icon: Icons.grade_outlined,
-                  onTap: () => Get.to(GradesInterface()),
-                ),
-                SizedBox(height: 16),
-                _SidebarIcon(
-                  lable: 'War Report',
-                  icon: Icons.assignment_add,
-                  onTap: () => Get.to(WarReportPage1()),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 18),
-        ],
+        ),
       ),
     );
   }

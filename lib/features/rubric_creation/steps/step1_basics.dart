@@ -1,6 +1,7 @@
 import 'package:dpng_staff/features/rubric_creation/controller/rubric_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 
 class Step1Basics extends StatelessWidget {
   final RubricController c = Get.find<RubricController>();
@@ -37,30 +38,78 @@ class Step1Basics extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Obx(
-          () => Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: c.scopes.map((scope) {
-              final selected = c.mainScope.value == scope;
-              return ChoiceChip(
-                label: Text(scope),
-                selected: selected,
-                onSelected: (_) => c.mainScope.value = scope,
-                selectedColor: Colors.blue[100],
-              );
-            }).toList(),
-          ),
+          () => c.loadingCategories.value
+              ? CategoryChipsShimmer()
+              : Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: c.categories.map((category) {
+                    final selected =
+                        c.selectedCategory.value != null &&
+                        c.selectedCategory.value!.title == category.title;
+                    return ChoiceChip(
+                      label: Text(category.title),
+                      selected: selected,
+                      onSelected: (_) {
+                        c.selectedCategory.value = category;
+                        c.fetchCompetencies([
+                          c.selectedCategory.value!.ccid,
+                          ...c.additionalSelectedScopes.map(
+                            (element) => element.ccid,
+                          ),
+                        ]);
+                        if (category.ccid == 4) {
+                          c.fetchScienceStandards();
+                        } else {
+                          c.fetchNonScienceStandards(category.ccid);
+                        }
+                      },
+                      selectedColor: Colors.blue[100],
+                    );
+                  }).toList(),
+                ),
         ),
         const SizedBox(height: 16),
-        if (c.mainScope.value.isNotEmpty)
-          Text(
-            "Selected: ${c.mainScope.value}",
-            style: const TextStyle(
-              fontStyle: FontStyle.italic,
-              color: Colors.black54,
-            ),
-          ),
+        Obx(
+          () => c.selectedCategory.value != null
+              ? Text(
+                  "Selected: ${c.selectedCategory.value!.title}",
+                  style: const TextStyle(
+                    fontStyle: FontStyle.italic,
+                    color: Colors.black54,
+                  ),
+                )
+              : SizedBox(),
+        ),
       ],
+    );
+  }
+}
+
+class CategoryChipsShimmer extends StatelessWidget {
+  const CategoryChipsShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: List.generate(
+          8,
+          (index) => Container(
+            height: 32,
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const SizedBox(width: 60),
+          ),
+        ),
+      ),
     );
   }
 }

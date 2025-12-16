@@ -21,9 +21,9 @@ class CoursesController extends GetxController {
       var query = supabase
           .from('alt_courses')
           .select(
-            'a_cid,cid,ccid,title1,course_content_category(color,cc_category))',
+            'a_cid,cid,ccid,title1,overview1,course_type,course_content_category(color,cc_category))',
           )
-          // .eq('userid_assigned', user!.userId!)
+           .eq('userid_assigned', user!.userId!)
           .eq('alyid', learningYear)
           .eq('course_type', courseType)
           .eq('active', 1);

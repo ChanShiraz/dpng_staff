@@ -1,4 +1,6 @@
+import 'package:dpng_staff/common/top_bar.dart';
 import 'package:dpng_staff/features/district_summative_library/models/summative_model.dart';
+import 'package:dpng_staff/features/district_summative_library/widgets/button_shadow.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/filter_dropdown.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/preview_panel.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/search_bar.dart';
@@ -71,7 +73,121 @@ class _DistrictSummativeLibraryPageState
               flex: 2,
               child: Column(
                 children: [
-                  _buildTopBar(),
+                  TopBar(
+                    title: 'Summative Library',
+                    type: 2,
+                    subtitle: 'Browse, filter, and preview summatives…',
+                    trailing: Row(
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            minimumSize: Size(10, 45),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(15),
+                            ),
+                          ),
+                          onPressed: () {},
+                          child: Text('Add Summative'),
+                        ),
+                        SizedBox(width: 10),
+                        ButtonShadow(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              backgroundColor: Colors.white,
+                              minimumSize: Size(10, 45),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadiusGeometry.circular(15),
+                              ),
+                            ),
+                            onPressed: () {},
+                            child: Text(
+                              'Arcive',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        ButtonShadow(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              backgroundColor: Colors.white,
+                              minimumSize: Size(10, 45),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadiusGeometry.circular(15),
+                              ),
+                            ),
+                            onPressed: () {},
+                            child: Text(
+                              'Distric Summative',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        ButtonShadow(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              elevation: 0,
+                              backgroundColor: Colors.white,
+                              minimumSize: Size(10, 45),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadiusGeometry.circular(15),
+                              ),
+                            ),
+                            onPressed: () {},
+                            child: Text(
+                              'Reset',
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: Material(
+                            borderRadius: BorderRadius.circular(15),
+                            //elevation: 1,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(Icons.search, size: 20),
+                                hintText:
+                                    'Search by title, subject, or standard...',
+                                filled: true,
+                                fillColor: Colors.white,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        FilterWidget(
+                          title: 'All Subjects',
+                          leading: Icons.filter_alt_outlined,
+                          trailing: Icons.keyboard_arrow_down_sharp,
+                        ),
+                        SizedBox(width: 10),
+                        FilterWidget(
+                          title: 'Title A-Z',
+                          leading: Icons.sort,
+                          trailing: Icons.keyboard_arrow_down_sharp,
+                        ),
+                      ],
+                    ),
+                  ),
                   Expanded(
                     child: Row(
                       children: [
@@ -98,32 +214,44 @@ class _DistrictSummativeLibraryPageState
       ),
     );
   }
+}
 
-  Widget _buildTopBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: () => Get.back(),
-            icon: Icon(Icons.arrow_back_ios_new),
-          ),
-          SizedBox(width: 10),
-          const Text(
-            "District Summative Library",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-          ),
-          const Spacer(),
-          const SizedBox(width: 300, child: SearchBarWidget()),
-          const SizedBox(width: 10),
-          const FilterDropdown(label: "All Subjects"),
-          const SizedBox(width: 10),
-          const FilterDropdown(label: "All Schools"),
-          const SizedBox(width: 10),
-          const FilterDropdown(label: "Title A–Z"),
-          const SizedBox(width: 10),
-          OutlinedButton(onPressed: () {}, child: const Text("Reset")),
-        ],
+class FilterWidget extends StatelessWidget {
+  const FilterWidget({
+    super.key,
+    required this.title,
+    required this.leading,
+    required this.trailing,
+  });
+  final String title;
+  final IconData leading;
+  final IconData trailing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      flex: 1,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        height: 48,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade300),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(leading, size: 20),
+                SizedBox(width: 10),
+                Text(title),
+              ],
+            ),
+            Icon(trailing, size: 20),
+          ],
+        ),
       ),
     );
   }

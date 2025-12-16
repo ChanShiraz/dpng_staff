@@ -16,16 +16,28 @@ class Step2AdditionalScopes extends StatelessWidget {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: c.scopes.map((scope) {
-              final selected = c.additionalScopes.contains(scope);
-              final disabled = scope == c.mainScope.value;
+            children: c.categories.map((category) {
+              final selected = c.additionalSelectedScopes.value.contains(
+                category,
+              );
+              final disabled =
+                  category.title == c.selectedCategory.value!.title;
+              if (disabled) return SizedBox();
               return FilterChip(
                 avatar: selected ? null : Icon(Icons.add, color: Colors.black),
-                label: Text(scope),
+                label: Text(category.title),
                 selected: selected,
                 onSelected: disabled
                     ? null
-                    : (_) => c.toggleAdditionalScope(scope),
+                    : (_) {
+                        c.toggleAdditionalScope(category);
+                        c.fetchCompetencies([
+                          c.selectedCategory.value!.ccid,
+                          ...c.additionalSelectedScopes.map(
+                            (element) => element.ccid,
+                          ),
+                        ]);
+                      },
                 selectedColor: Colors.green[100],
                 backgroundColor: disabled ? Colors.grey[200] : null,
               );
@@ -33,7 +45,7 @@ class Step2AdditionalScopes extends StatelessWidget {
           ),
           SizedBox(height: 20),
           Text(
-            'Selected: ${c.alignedScopes.isEmpty ? "None selected yet" : c.alignedScopes.join(", ")}',
+            'Selected: ${c.additionalSelectedScopes.isEmpty ? "None selected yet" : c.additionalSelectedScopes.map((element) => element.title).join(', ')}',
             style: const TextStyle(color: Colors.black54),
           ),
         ],

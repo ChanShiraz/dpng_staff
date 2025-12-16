@@ -1,3 +1,4 @@
+import 'package:dpng_staff/features/auth/controller/user_controller.dart';
 import 'package:dpng_staff/features/auth/models/user_model.dart';
 import 'package:dpng_staff/features/home/view/home_page.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,10 @@ class LoginController extends GetxController {
       await box.write('auth', true);
       await box.write('userid', userId);
       await getUser();
+
       Get.offAll(HomePage());
+      Get.delete<LoginController>();
+      Get.find<UserController>().loadUser();
     } catch (e) {
       Get.rawSnackbar(message: 'Error! Something went wrong!');
       print('error login $e');
@@ -91,8 +95,9 @@ class LoginController extends GetxController {
 
   @override
   void onClose() {
-    emailController.dispose();
-    passwordController.dispose();
+    // emailController.dispose();
+    // passwordController.dispose();
+    Get.delete<LoginController>();
     super.onClose();
   }
 }

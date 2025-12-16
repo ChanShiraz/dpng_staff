@@ -1,3 +1,5 @@
+import 'package:dpng_staff/common/top_bar.dart';
+import 'package:dpng_staff/features/assess_formative/widgets/topbar.dart';
 import 'package:dpng_staff/features/summative_creation/controller/summative_creation_controller.dart';
 import 'package:dpng_staff/features/summative_creation/widgets/progress_bar.dart';
 import 'package:dpng_staff/features/summative_creation/widgets/step1_scope.dart';
@@ -105,45 +107,58 @@ class HeaderSection extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       child: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    onPressed: () => Get.back(),
-                    icon: Icon(Icons.arrow_back_ios),
-                  ),
-                  SizedBox(width: 10),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Add ISL Summative",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        "Live creation • Steps unlock as you go.",
-                        style: TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  _headerButton("Go to Step 1", 1, enabled: true),
-                  const SizedBox(width: 8),
-                  _headerButton("Go to Step 2", 2, enabled: step1Complete),
-                  const SizedBox(width: 8),
-                  _headerButton("Go to Step 3", 3, enabled: step2Complete),
-                ],
-              ),
-            ],
+          TopBar(
+            title: 'Add ISL Summative',
+            subtitle: 'Live creation • Steps unlock as you go.',
+            trailing: Row(
+              children: [
+                _headerButton("Go to Step 1", 1, enabled: true),
+                const SizedBox(width: 8),
+                _headerButton("Go to Step 2", 2, enabled: step1Complete),
+                const SizedBox(width: 8),
+                _headerButton("Go to Step 3", 3, enabled: step2Complete),
+              ],
+            ),
           ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     Row(
+          //       children: [
+          //         IconButton(
+          //           onPressed: () => Get.back(),
+          //           icon: Icon(Icons.arrow_back_ios),
+          //         ),
+          //         SizedBox(width: 10),
+          //         Column(
+          //           crossAxisAlignment: CrossAxisAlignment.start,
+          //           children: [
+          //             Text(
+          //               "Add ISL Summative",
+          //               style: TextStyle(
+          //                 fontSize: 18,
+          //                 fontWeight: FontWeight.bold,
+          //               ),
+          //             ),
+          //             Text(
+          //               "Live creation • Steps unlock as you go.",
+          //               style: TextStyle(fontSize: 13, color: Colors.grey),
+          //             ),
+          //           ],
+          //         ),
+          //       ],
+          //     ),
+          //     Row(
+          //       children: [
+          //         _headerButton("Go to Step 1", 1, enabled: true),
+          //         const SizedBox(width: 8),
+          //         _headerButton("Go to Step 2", 2, enabled: step1Complete),
+          //         const SizedBox(width: 8),
+          //         _headerButton("Go to Step 3", 3, enabled: step2Complete),
+          //       ],
+          //     ),
+          //   ],
+          // ),
           const SizedBox(height: 10),
           ProgressBar(
             openStep: openStep,

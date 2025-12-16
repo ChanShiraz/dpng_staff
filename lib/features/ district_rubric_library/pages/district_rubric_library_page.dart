@@ -1,3 +1,4 @@
+import 'package:dpng_staff/common/top_bar.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/filter_dropdown.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
@@ -45,20 +46,11 @@ class DistrictRubricLibraryPage extends StatelessWidget {
   }
 
   Widget _buildTopBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Row(
+    return TopBar(
+      title: "District Rubric Library",
+      type: 2,
+      trailing: Row(
         children: [
-          IconButton(
-            onPressed: () => Get.back(),
-            icon: Icon(Icons.arrow_back_ios),
-          ),
-          SizedBox(width: 10),
-          const Text(
-            "District Rubric Library",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-          ),
-          const Spacer(),
           const SizedBox(width: 300, child: SearchBarWidget()),
           const SizedBox(width: 10),
           const FilterDropdown(label: "All Subjects"),
@@ -71,5 +63,31 @@ class DistrictRubricLibraryPage extends StatelessWidget {
         ],
       ),
     );
+    // Padding(
+    //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+    //   child: Row(
+    //     children: [
+    //       IconButton(
+    //         onPressed: () => Get.back(),
+    //         icon: Icon(Icons.arrow_back_ios),
+    //       ),
+    //       SizedBox(width: 10),
+    //       const Text(
+    //         "District Rubric Library",
+    //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+    //       ),
+    //       const Spacer(),
+    //       const SizedBox(width: 300, child: SearchBarWidget()),
+    //       const SizedBox(width: 10),
+    //       const FilterDropdown(label: "All Subjects"),
+    //       const SizedBox(width: 10),
+    //       const FilterDropdown(label: "All Schools"),
+    //       const SizedBox(width: 10),
+    //       const FilterDropdown(label: "Title A–Z"),
+    //       const SizedBox(width: 10),
+    //       OutlinedButton(onPressed: () {}, child: const Text("Reset")),
+    //     ],
+    //   ),
+    // );
   }
 }
