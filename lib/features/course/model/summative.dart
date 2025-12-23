@@ -5,10 +5,12 @@ class Summative {
   final int dmod_sum_id;
   final String title;
   final String task;
+  DateTime? dueDate;
   Summative({
     required this.dmod_sum_id,
     required this.title,
     required this.task,
+    this.dueDate,
   });
 
   Map<String, dynamic> toMap() {

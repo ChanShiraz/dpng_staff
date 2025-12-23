@@ -1,4 +1,7 @@
 import 'package:dpng_staff/common/top_bar.dart';
+import 'package:dpng_staff/features/%20district_rubric_library/widgets/search_tile.dart';
+import 'package:dpng_staff/features/assess_formative/widgets/topbar.dart';
+import 'package:dpng_staff/features/district_summative_library/widgets/button_shadow.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/filter_dropdown.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
@@ -7,13 +10,24 @@ import '../controllers/rubric_controller.dart';
 import '../widgets/rubric_list.dart';
 import '../widgets/preview_panel_rubric.dart';
 
-class DistrictRubricLibraryPage extends StatelessWidget {
+class DistrictRubricLibraryPage extends StatefulWidget {
   const DistrictRubricLibraryPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.put(DistrictRubricController());
+  State<DistrictRubricLibraryPage> createState() =>
+      _DistrictRubricLibraryPageState();
+}
 
+class _DistrictRubricLibraryPageState extends State<DistrictRubricLibraryPage> {
+  final controller = Get.put(DistrictRubricController());
+  @override
+  void initState() {
+    controller.fetchRubrics();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FAFC),
       body: SafeArea(
@@ -21,16 +35,34 @@ class DistrictRubricLibraryPage extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: [
-              _buildTopBar(),
+              TopBar(
+                title: 'District Rubric Library',
+                type: 2,
+                subtitle:
+                    'Browse, filter, and preview rubrics used across the district.',
+                trailing: ButtonShadow(
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                    ),
+                    child: Text('Reset', style: TextStyle(color: Colors.black)),
+                  ),
+                ),
+              ),
+
+              // _buildTopBar(),
+              SearchTile(),
               Expanded(
                 child: Row(
                   children: [
-                    const Expanded(flex: 3, child: RubricList()),
+                    Expanded(flex: 5, child: RubricList()),
                     SizedBox(width: 10),
                     Expanded(
-                      flex: 2,
+                      flex: 3,
                       child: Obx(
                         () => PreviewPanelRubric(
+                          controller: controller,
                           rubric: controller.selectedRubric.value,
                         ),
                       ),
@@ -43,51 +75,5 @@ class DistrictRubricLibraryPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildTopBar() {
-    return TopBar(
-      title: "District Rubric Library",
-      type: 2,
-      trailing: Row(
-        children: [
-          const SizedBox(width: 300, child: SearchBarWidget()),
-          const SizedBox(width: 10),
-          const FilterDropdown(label: "All Subjects"),
-          const SizedBox(width: 10),
-          const FilterDropdown(label: "All Schools"),
-          const SizedBox(width: 10),
-          const FilterDropdown(label: "Title A–Z"),
-          const SizedBox(width: 10),
-          OutlinedButton(onPressed: () {}, child: const Text("Reset")),
-        ],
-      ),
-    );
-    // Padding(
-    //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-    //   child: Row(
-    //     children: [
-    //       IconButton(
-    //         onPressed: () => Get.back(),
-    //         icon: Icon(Icons.arrow_back_ios),
-    //       ),
-    //       SizedBox(width: 10),
-    //       const Text(
-    //         "District Rubric Library",
-    //         style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-    //       ),
-    //       const Spacer(),
-    //       const SizedBox(width: 300, child: SearchBarWidget()),
-    //       const SizedBox(width: 10),
-    //       const FilterDropdown(label: "All Subjects"),
-    //       const SizedBox(width: 10),
-    //       const FilterDropdown(label: "All Schools"),
-    //       const SizedBox(width: 10),
-    //       const FilterDropdown(label: "Title A–Z"),
-    //       const SizedBox(width: 10),
-    //       OutlinedButton(onPressed: () {}, child: const Text("Reset")),
-    //     ],
-    //   ),
-    // );
   }
 }

@@ -1,37 +1,32 @@
+import 'package:dpng_staff/features/district_summative_library/widgets/summative_card.dart';
+import 'package:dpng_staff/features/rubric_creation/steps/step5_rubric_levels.dart';
+import 'package:dpng_staff/features/summative_creation/controller/rubric_level_controller.dart';
+import 'package:dpng_staff/features/summative_creation/controller/summative_creation_controller.dart';
+import 'package:dpng_staff/features/summative_creation/models/rubric.dart';
+import 'package:dpng_staff/features/summative_creation/widgets/instructional_material_dialog.dart';
+import 'package:dpng_staff/features/summative_creation/widgets/resource_section.dart';
+import 'package:dpng_staff/features/summative_creation/widgets/rubric_level_chip.dart';
+import 'package:dpng_staff/features/summative_creation/widgets/summative_link_dialog.dart';
+import 'package:dpng_staff/features/summative_creation/widgets/summative_text_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/instance_manager.dart';
+import 'package:get/route_manager.dart';
 import 'section_card.dart';
 
 class Step3Details extends StatelessWidget {
   final int? openStep;
-  final Map<String, dynamic> selectedRubric;
-  final String title;
-  final String deliverable;
-  final String courseAssoc;
-  final String scaffoldText;
-  final String activeLevel;
-  final Function(String) onTitleChange;
-  final Function(String) onDeliverableChange;
-  final Function(String) onCourseChange;
-  final Function(String) onScaffoldChange;
-  final Function(String) onLevelSelect;
+  final SummativeRubric? selectedRubric;
   final bool step2Complete;
   final bool step3Ready;
   final Map<String, Color> Function(String) levelColors;
+  final controller = Get.find<SummativeCreationController>();
+  final rubricLevelController = Get.find<RubricLevelController>();
 
-  const Step3Details({
+  Step3Details({
     super.key,
     required this.openStep,
     required this.selectedRubric,
-    required this.title,
-    required this.deliverable,
-    required this.courseAssoc,
-    required this.scaffoldText,
-    required this.activeLevel,
-    required this.onTitleChange,
-    required this.onDeliverableChange,
-    required this.onCourseChange,
-    required this.onScaffoldChange,
-    required this.onLevelSelect,
     required this.step2Complete,
     required this.step3Ready,
     required this.levelColors,
@@ -53,22 +48,66 @@ class Step3Details extends StatelessWidget {
         children: [
           Divider(),
           SizedBox(height: 15),
-          Container(
-            padding: EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black12),
-              borderRadius: BorderRadius.circular(10),
+          RoundContainer(padding: 25, circular: 20, child: _textFieldRow()),
+          const SizedBox(height: 16),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Obx(
+                    () => ResourceSection(
+                      title: 'Summative Resources Available',
+                      subtitle:
+                          'Add teacher provided items learners can access during the summative.',
+                      primaryButtonText: 'Add Text',
+                      secondaryButtonText: 'Add Link',
+                      primaryIcon: Icons.sticky_note_2_outlined,
+                      secondaryIcon: Icons.link_outlined,
+                      rows: controller.resourcecsAvailable.value,
+                      onPrimaryTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => SummativeTextDialog(),
+                        );
+                      },
+                      onSecondaryTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => SummativeLinkDialog(),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                SizedBox(width: 24),
+                Expanded(
+                  child: ResourceSection(
+                    title: 'Approved Instructional Materials',
+                    subtitle:
+                        'Add teacher provided items learners can access during the summative.',
+                    primaryButtonText: 'Add Resource',
+                    primaryIcon: Icons.note_add_outlined,
+                    rows: [],
+                    onPrimaryTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => InstructionalMaterialDialog(),
+                      );
+                    },
+                  ),
+                ),
+              ],
             ),
-            child: _textFieldRow(),
           ),
           const SizedBox(height: 16),
-          _levelChips(),
+          RubricLevelChip(),
           const SizedBox(height: 16),
-          _rubricInfo(),
+          // _rubricInfo(),
           const SizedBox(height: 16),
-          _scaffoldEntry(),
+          ScafolddingEntry(),
           const SizedBox(height: 16),
-          _footerButtons(),
+          _footerButtons(context),
         ],
       ),
     );
@@ -77,14 +116,23 @@ class Step3Details extends StatelessWidget {
   Widget _textFieldRow() {
     return Row(
       children: [
-        Expanded(child: _input("Title", '', title, onTitleChange)),
+        Expanded(
+          child: _input(
+            "Title",
+            'e.g., Systems of Equations Performance Task',
+
+            rubricLevelController.titleController,
+            //onTitleChange,
+          ),
+        ),
         const SizedBox(width: 8),
         Expanded(
           child: _input(
-            "Deliverable",
+            "Deliverable/ Product / Task",
             'e.g. Collaborative investigation + written analysis',
-            deliverable,
-            onDeliverableChange,
+
+            rubricLevelController.taskController,
+            // onDeliverableChange,
           ),
         ),
         const SizedBox(width: 8),
@@ -92,192 +140,108 @@ class Step3Details extends StatelessWidget {
           child: _input(
             "Common Course Association",
             'e.g. Math1, Unit 3, Module M01',
-            courseAssoc,
-            onCourseChange,
+
+            rubricLevelController.courseAssociationController,
+            //onCourseChange,
           ),
         ),
       ],
     );
   }
 
-  Widget _input(
-    String label,
-    String hint,
-    String value,
-    Function(String) onChange,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: TextStyle(color: Colors.black54)),
-        SizedBox(height: 5),
-        TextField(
-          decoration: InputDecoration(
-            hint: Text(hint, style: TextStyle(color: Colors.black54)),
-            border: const OutlineInputBorder(),
-            isDense: true,
-          ),
-          controller: TextEditingController(text: value),
-          onChanged: onChange,
-        ),
-      ],
-    );
-  }
-
-  Widget _levelChips() {
-    final levels = [
-      "Emerging",
-      "Capable",
-      "Bridging",
-      "Proficient",
-      "Metacognition",
-    ];
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: levels.map((lvl) {
-        final colors = levelColors(lvl);
-        final selected = lvl == activeLevel;
-        return ChoiceChip(
-          label: Text(lvl, style: TextStyle(color: colors['text'])),
-          selected: selected,
-          onSelected: (_) => onLevelSelect(lvl),
-          selectedColor: colors['bg'],
-          backgroundColor: Colors.white,
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _rubricInfo() {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: selectedRubric.isNotEmpty
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "${selectedRubric['competency']['code']} — ${selectedRubric['competency']['desc']}",
-                        style: const TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      SizedBox(height: 5),
-                      ...List.generate(
-                        (selectedRubric['standards'] as List).length,
-                        (i) => Text(
-                          selectedRubric['standards'][i],
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      ),
-                    ],
-                  )
-                : const Text("Select a rubric in Step 2 to display details."),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.grey.shade300),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Example of Integrated Rubric Language',
-                  style: TextStyle(fontWeight: FontWeight.w500),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  selectedRubric.isNotEmpty
-                      ? "Students collaboratively model and solve a real-world task related to “${selectedRubric['summary']}”."
-                      : "Choose a rubric in Step 2 to auto-generate example language.",
-                  style: const TextStyle(fontSize: 13),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _scaffoldEntry() {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
+  Widget _input(String label, String hint, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.only(right: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Enter Scaffolding Rubric",
-            style: TextStyle(fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Teacher Notes',
-                      style: TextStyle(color: Colors.black54),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.grey.shade300),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        'Use the descriptors above to craft task-specific success criteria (what "good" looks like). Include sample evidence artifacts (e.g., graphs, solution tables, error analysis) aligned to each level.',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(width: 10),
-
-              Expanded(
-                flex: 1,
-                child: TextField(
-                  maxLines: 6,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Enter task-specific success criteria...",
-                  ),
-                  controller: TextEditingController(text: scaffoldText),
-                  onChanged: onScaffoldChange,
-                ),
-              ),
-            ],
+          Text(label, style: TextStyle(color: Colors.black87)),
+          SizedBox(height: 5),
+          TextField(
+            decoration: InputDecoration(
+              hint: Text(hint, style: TextStyle(color: Colors.black54)),
+              border: const OutlineInputBorder(),
+              isDense: true,
+            ),
+            controller: controller,
+            // onChanged: onChange,
           ),
         ],
       ),
     );
   }
 
-  Widget _footerButtons() {
+  // Widget _rubricInfo() {
+  //   return IntrinsicHeight(
+  //     child: Row(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Expanded(
+  //           child: Container(
+  //             padding: const EdgeInsets.all(12),
+  //             decoration: BoxDecoration(
+  //               color: Colors.white,
+  //               border: Border.all(color: Colors.grey.shade300),
+  //               borderRadius: BorderRadius.circular(8),
+  //             ),
+  //             child: selectedRubric.isNotEmpty
+  //                 ? Column(
+  //                     crossAxisAlignment: CrossAxisAlignment.start,
+  //                     children: [
+  //                       Text(
+  //                         'Competency & Standards (from step 2)',
+  //                         // "${selectedRubric['competency']['code']} — ${selectedRubric['competency']['desc']}",
+  //                         style: const TextStyle(fontWeight: FontWeight.w500),
+  //                       ),
+  //                       SizedBox(height: 5),
+  //                       ...List.generate(
+  //                         (selectedRubric['standards'] as List).length,
+  //                         (i) => Text(
+  //                           selectedRubric['standards'][i],
+  //                           style: const TextStyle(
+  //                             fontSize: 12,
+  //                             color: Colors.black54,
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ],
+  //                   )
+  //                 : const Text("Select a rubric in Step 2 to display details."),
+  //           ),
+  //         ),
+  //         const SizedBox(width: 8),
+  //         Expanded(
+  //           child: Container(
+  //             padding: const EdgeInsets.all(12),
+  //             decoration: BoxDecoration(
+  //               color: Colors.white,
+  //               border: Border.all(color: Colors.grey.shade300),
+  //               borderRadius: BorderRadius.circular(8),
+  //             ),
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Text(
+  //                   'Example of Integrated Rubric Language',
+  //                   style: TextStyle(fontWeight: FontWeight.w500),
+  //                 ),
+  //                 SizedBox(height: 5),
+  //                 Text(
+  //                   selectedRubric.isNotEmpty
+  //                       ? "Students collaboratively model and solve a real-world task related to “${selectedRubric['summary']}”."
+  //                       : "Choose a rubric in Step 2 to auto-generate example language.",
+  //                   style: const TextStyle(fontSize: 13, color: Colors.black54),
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  Widget _footerButtons(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -297,16 +261,41 @@ class Step3Details extends StatelessWidget {
         ),
         Row(
           children: [
-            OutlinedButton(onPressed: () {}, child: const Text("Save Draft")),
+            OutlinedButton(
+              onPressed: step3Ready ? () {} : null,
+              child: const Text("Save Draft"),
+            ),
             const SizedBox(width: 8),
             ElevatedButton(
-              onPressed: step3Ready ? () {} : null,
+              onPressed: step3Ready
+                  ? controller.insertingSummative.value
+                        ? null
+                        : () async {
+                            await controller.insertSummative();
+                            Get.delete<RubricLevelController>();
+                            showDesktopToast(context, 'Summmative added!');
+                          }
+                  : null,
               style: ElevatedButton.styleFrom(
                 backgroundColor: step3Ready
                     ? Colors.green
                     : Colors.grey.shade400,
               ),
-              child: const Text("Submit Summative"),
+              child: Obx(
+                () => controller.insertingSummative.value
+                    ? Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 52),
+                        child: SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      )
+                    : const Text("Submit Summative"),
+              ),
             ),
           ],
         ),

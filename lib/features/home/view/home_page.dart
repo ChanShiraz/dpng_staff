@@ -103,19 +103,6 @@ class _HomePageState extends State<HomePage> {
                                         },
                                         //coursesController: coursesController,
                                       ),
-                                      const Spacer(),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                        child: IconButton(
-                                          onPressed: () {},
-                                          icon: const Icon(Icons.menu),
-                                        ),
-                                      ),
                                     ],
                                   ),
 

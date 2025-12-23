@@ -15,7 +15,7 @@ class GradingOverviewCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Grading Overview',
+              'Course Grading Overview',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
             ),
             Padding(

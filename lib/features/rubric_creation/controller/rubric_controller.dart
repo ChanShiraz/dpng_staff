@@ -1,10 +1,14 @@
+import 'package:dpng_staff/features/auth/controller/user_controller.dart';
 import 'package:dpng_staff/features/grades/models/standard.dart';
+import 'package:dpng_staff/features/rubric_creation/controller/rubric_repo.dart';
 import 'package:dpng_staff/features/rubric_creation/models/competency.dart';
 import 'package:dpng_staff/features/rubric_creation/models/course_category.dart';
 import 'package:dpng_staff/features/rubric_creation/models/levels_data.dart';
 import 'package:dpng_staff/features/rubric_creation/models/non_science_standard.dart';
+import 'package:dpng_staff/features/rubric_creation/models/rubric.dart';
 import 'package:dpng_staff/features/rubric_creation/models/science_standard.dart';
 import 'package:dpng_staff/features/rubric_creation/models/state_standards.dart';
+import 'package:dpng_staff/features/summative_creation/controller/rubric_level_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -326,17 +330,98 @@ class RubricController extends GetxController {
     'Metacognition': '',
   }.obs;
 
-  /// Step completion
-  RxBool step5Ready = false.obs;
+  // Step completion
+  final repo = RubricRepo();
+  final rubricController = Get.put(RubricLevelController());
+  RxBool step5Ready = Get.find<RubricLevelController>().rubricLevelsReady;
 
   void setLevel(LocalLevels level) {
     activeLevel.value = level;
   }
 
-  // void updateText(String level, String value) {
-  //   rubricText[level] = value;
-  //   rubricText.refresh();
-  // }
+  RxBool insertingRubric = false.obs;
+  RxBool draftingRubric = false.obs;
+  Future<void> insertRubric(int draftStatus) async {
+    draftStatus == 1
+        ? draftingRubric.value = true
+        : insertingRubric.value = true;
+    try {
+      Rubric rubric = Rubric(
+        ccid: selectedCategory.value!.ccid,
+        title: rubricTitle.value,
+        type: selectedCategory.value!.ccid == 4 ? 2 : 1,
+        active: 1,
+        approved: 1,
+        assigned: 0,
+        instructor_created: 1,
+        instructor_userid:
+            Get.find<UserController>().currentUser.value!.userId!,
+        instructor_draft_status: draftStatus,
+      );
+      int drlid = await repo.insertRubric(rubric);
+      await insertIntegratedRubrics(drlid);
+      await insertCompetencies(drlid);
+      if (selectedCategory.value!.ccid == 4) {
+        await insertSciencStandards(drlid);
+      } else {
+        await insertStandards(drlid);
+      }
+      print('rubric uploaded id $drlid');
+    } catch (e) {
+      debugPrint('Error inserting rubric $e');
+    }
+    insertingRubric.value = false;
+    draftingRubric.value = false;
+  }
+
+  Future<void> insertIntegratedRubrics(int drlid) async {
+    try {
+      await repo.insertIntegratedRubrics(
+        drlid: drlid,
+        emerging: rubricController.emergingTextController.text,
+        capable: rubricController.capableTextController.text,
+        bridging: rubricController.bridgingTextController.text,
+        proficient: rubricController.proficientTextController.text,
+        advanced: rubricController.metacognitionTextController.text,
+      );
+      debugPrint('Integrated rubric levels inserted');
+    } catch (e) {
+      debugPrint('Error inserting integrated rubric levels $e');
+    }
+  }
+
+  Future<void> insertCompetencies(int drlid) async {
+    try {
+      for (var competency in selectedCompetencies) {
+        await repo.insertCompetecy(drlid, competency.dpcid);
+      }
+      debugPrint('Competencies inserted for rubric $drlid');
+    } catch (e) {
+      debugPrint('Error inserting competencies for rubric $drlid: $e');
+    }
+  }
+
+  Future<void> insertSciencStandards(int drlid) async {
+    try {
+      for (var standard in selectedScienceStandards) {
+        await repo.insertScienceStandards(drlid, standard.ngpeid);
+      }
+      debugPrint('science Standards inserted for rubric $drlid');
+    } catch (e) {
+      debugPrint('Error inserting standards for rubric $drlid: $e');
+    }
+  }
+
+  Future<void> insertStandards(int drlid) async {
+    try {
+      for (var standard in selectedNonScienceStandards) {
+        await repo.insertStandards(drlid, standard.p_standid);
+      }
+      debugPrint('Standards inserted for rubric $drlid');
+    } catch (e) {
+      debugPrint('Error inserting standards for rubric $drlid: $e');
+    }
+  }
 }
 
 class LocalLevels {

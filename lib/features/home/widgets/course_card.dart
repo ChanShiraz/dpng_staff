@@ -25,7 +25,7 @@ class CourseTile extends StatelessWidget {
       child: InkWell(
         onTap: () => Get.to(CourseOverviewPage(course: course)),
         child: Container(
-          width: 320,
+          width: 280,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(16),
@@ -65,13 +65,13 @@ class CourseTile extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         SizedBox(
-                          width: 120,
+                          width: 100,
                           child: Text(
                             course.title1,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
@@ -115,15 +115,7 @@ class CourseTile extends StatelessWidget {
     );
   }
 
-  Color hexToColor(String hex) {
-    hex = hex.replaceAll('#', '');
-
-    if (hex.length == 6) {
-      hex = 'FF$hex'; // add alpha if missing
-    }
-
-    return Color(int.parse(hex, radix: 16));
-  }
+  
 }
 
 class CourseCarousel extends StatelessWidget {
@@ -154,3 +146,13 @@ class CourseCarousel extends StatelessWidget {
     );
   }
 }
+
+Color hexToColor(String hex) {
+    hex = hex.replaceAll('#', '');
+
+    if (hex.length == 6) {
+      hex = 'FF$hex'; // add alpha if missing
+    }
+
+    return Color(int.parse(hex, radix: 16));
+  }

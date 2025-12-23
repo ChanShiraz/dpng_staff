@@ -2,83 +2,82 @@ import 'package:dpng_staff/common/top_bar.dart';
 import 'package:dpng_staff/features/assess_formative/widgets/topbar.dart';
 import 'package:dpng_staff/features/summative_creation/controller/summative_creation_controller.dart';
 import 'package:dpng_staff/features/summative_creation/widgets/progress_bar.dart';
+import 'package:dpng_staff/features/summative_creation/widgets/rubric_level_chip.dart';
 import 'package:dpng_staff/features/summative_creation/widgets/step1_scope.dart';
 import 'package:dpng_staff/features/summative_creation/widgets/step2_rubric.dart';
 import 'package:dpng_staff/features/summative_creation/widgets/step3_details.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SummativeCreationSingleView extends StatelessWidget {
+class SummativeCreationSingleView extends StatefulWidget {
   const SummativeCreationSingleView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.put(SummativeCreationController());
+  State<SummativeCreationSingleView> createState() =>
+      _SummativeCreationSingleViewState();
+}
 
+class _SummativeCreationSingleViewState
+    extends State<SummativeCreationSingleView> {
+  final controller = Get.put(SummativeCreationController());
+  @override
+  void initState() {
+    controller.fetchCategories();
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       body: SafeArea(
         child: Obx(
-          () => SingleChildScrollView(
-            child: Column(
-              children: [
-                HeaderSection(
-                  step1Complete: controller.step1Complete.value,
-                  step2Complete: controller.step2Complete.value,
-                  openStep: controller.openStep.value,
-                  onStepChange: controller.handleStepChange,
-                ),
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Step1Scope(
-                            scopes: controller.scopes,
-                            selectedScope: controller.selectedScope.value,
-                            onSelect: controller.handleScopeSelect,
-                            openStep: controller.openStep.value,
-                          ),
-                          const SizedBox(height: 16),
+          () => Column(
+            children: [
+              HeaderSection(
+                step1Complete: controller.step1Complete.value,
+                step2Complete: controller.step2Complete.value,
+                step3Complete: controller.step3Complete.value,
+                openStep: controller.openStep.value,
+                onStepChange: controller.handleStepChange,
+              ),
 
-                          Step2Rubric(
-                            rubricRows: controller.rubricRows,
-                            selectedRubricId: controller.selectedRubricId.value,
-                            step1Complete: controller.step1Complete.value,
-                            openStep: controller.openStep.value,
-                            onSelect: controller.handleRubricSelect,
-                          ),
-                          const SizedBox(height: 16),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        Step1Scope(
+                          // selectedScope: controller.selectedScope.value,
+                          // onSelect: controller.handleScopeSelect,
+                          openStep: controller.openStep.value,
+                        ),
+                        const SizedBox(height: 16),
 
-                          Step3Details(
-                            openStep: controller.openStep.value,
-                            selectedRubric: controller.selectedRubric.value!,
-                            title: controller.title.value,
-                            deliverable: controller.deliverable.value,
-                            courseAssoc: controller.courseAssoc.value,
-                            scaffoldText: controller.scaffoldText.value,
-                            activeLevel: controller.activeLevel.value,
-                            onTitleChange: (v) => controller.title.value = v,
-                            onDeliverableChange: (v) =>
-                                controller.deliverable.value = v,
-                            onCourseChange: (v) =>
-                                controller.courseAssoc.value = v,
-                            onScaffoldChange: (v) =>
-                                controller.scaffoldText.value = v,
-                            onLevelSelect: controller.handleLevelSelect,
-                            step2Complete: controller.step2Complete.value,
-                            step3Ready: controller.step3Ready,
-                            levelColors: controller.levelColors,
-                          ),
-                        ],
-                      ),
+                        Step2Rubric(
+                          selectedRubricId: controller.selectedRubric.value,
+                          step1Complete: controller.step1Complete.value,
+                          openStep: controller.openStep.value,
+                          onSelect: controller.handleRubricSelect,
+                        ),
+                        const SizedBox(height: 16),
+
+                        Step3Details(
+                          openStep: controller.openStep.value,
+                          selectedRubric: controller.selectedRubric.value,
+                          step2Complete: controller.step2Complete.value,
+                          step3Ready: controller.step3Complete.value,
+                          levelColors: levelColors,
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -89,6 +88,7 @@ class SummativeCreationSingleView extends StatelessWidget {
 class HeaderSection extends StatelessWidget {
   final bool step1Complete;
   final bool step2Complete;
+  final bool step3Complete;
   final int? openStep;
   final Function(int) onStepChange;
 
@@ -96,6 +96,7 @@ class HeaderSection extends StatelessWidget {
     super.key,
     required this.step1Complete,
     required this.step2Complete,
+    required this.step3Complete,
     required this.openStep,
     required this.onStepChange,
   });
@@ -108,6 +109,7 @@ class HeaderSection extends StatelessWidget {
       child: Column(
         children: [
           TopBar(
+            type: 2,
             title: 'Add ISL Summative',
             subtitle: 'Live creation • Steps unlock as you go.',
             trailing: Row(
@@ -120,50 +122,13 @@ class HeaderSection extends StatelessWidget {
               ],
             ),
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     Row(
-          //       children: [
-          //         IconButton(
-          //           onPressed: () => Get.back(),
-          //           icon: Icon(Icons.arrow_back_ios),
-          //         ),
-          //         SizedBox(width: 10),
-          //         Column(
-          //           crossAxisAlignment: CrossAxisAlignment.start,
-          //           children: [
-          //             Text(
-          //               "Add ISL Summative",
-          //               style: TextStyle(
-          //                 fontSize: 18,
-          //                 fontWeight: FontWeight.bold,
-          //               ),
-          //             ),
-          //             Text(
-          //               "Live creation • Steps unlock as you go.",
-          //               style: TextStyle(fontSize: 13, color: Colors.grey),
-          //             ),
-          //           ],
-          //         ),
-          //       ],
-          //     ),
-          //     Row(
-          //       children: [
-          //         _headerButton("Go to Step 1", 1, enabled: true),
-          //         const SizedBox(width: 8),
-          //         _headerButton("Go to Step 2", 2, enabled: step1Complete),
-          //         const SizedBox(width: 8),
-          //         _headerButton("Go to Step 3", 3, enabled: step2Complete),
-          //       ],
-          //     ),
-          //   ],
-          // ),
+
           const SizedBox(height: 10),
           ProgressBar(
             openStep: openStep,
             step1Complete: step1Complete,
             step2Complete: step2Complete,
+            step3Complete: step3Complete,
             onStepTap: onStepChange,
           ),
         ],

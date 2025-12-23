@@ -87,8 +87,8 @@ class Step1Basics extends StatelessWidget {
 }
 
 class CategoryChipsShimmer extends StatelessWidget {
-  const CategoryChipsShimmer({super.key});
-
+  const CategoryChipsShimmer({super.key,this.qty = 8});
+ final int qty;
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
@@ -98,7 +98,7 @@ class CategoryChipsShimmer extends StatelessWidget {
         spacing: 8,
         runSpacing: 8,
         children: List.generate(
-          8,
+          qty,
           (index) => Container(
             height: 32,
             padding: const EdgeInsets.symmetric(horizontal: 14),

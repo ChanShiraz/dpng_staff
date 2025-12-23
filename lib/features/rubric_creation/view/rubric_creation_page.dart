@@ -105,7 +105,7 @@ class _RubricCreationPageState extends State<RubricCreationPage> {
                               ? () {
                                   c.openStep.value = 5;
                                   c.step5ExController.expand();
-                                  c.step5Ready.value = true;
+                                  // c.step5Ready.value = true;
                                 }
                               : null,
                           child: (c.selectedCategory.value?.ccid ?? 0) != 4
@@ -121,8 +121,9 @@ class _RubricCreationPageState extends State<RubricCreationPage> {
                             "Draft the integrated rubric text for each proficiency level (Metacognition replaces Advanced).",
                         completed: c.step5Ready.value,
                         locked: !c.step4Complete.value,
-                        child: Step5RubricLevels(),
                         onBack: () => c.openStep.value = 4,
+                        showFooter: false,
+                        child: Step5RubricLevels(),
                       ),
                     ],
                   ),

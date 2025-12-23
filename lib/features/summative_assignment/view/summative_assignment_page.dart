@@ -1,4 +1,5 @@
 import 'package:dpng_staff/features/course/model/summative.dart';
+import 'package:dpng_staff/features/home/models/course_model.dart';
 import 'package:dpng_staff/features/summative_assignment/controller/summative_assingnment_controller.dart';
 import 'package:dpng_staff/features/summative_assignment/widgets/assign_duedates_card.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +7,13 @@ import 'package:get/get.dart';
 import 'package:dpng_staff/common/top_bar.dart';
 
 class SummativeAssignmentPage extends StatefulWidget {
-  SummativeAssignmentPage({super.key, required this.summative});
+  const SummativeAssignmentPage({
+    super.key,
+    required this.summative,
+    required this.course,
+  });
   final Summative summative;
-  late SummativeAssingnmentController controller;
+  final CourseModel course;
 
   @override
   State<SummativeAssignmentPage> createState() =>
@@ -16,10 +21,17 @@ class SummativeAssignmentPage extends StatefulWidget {
 }
 
 class _SummativeAssignmentPageState extends State<SummativeAssignmentPage> {
+  late SummativeAssingnmentController controller;
   @override
   void initState() {
-    widget.controller = Get.put(SummativeAssingnmentController());
-    widget.controller.fetchLessons(widget.summative.dmod_sum_id);
+    controller = Get.put(
+      SummativeAssingnmentController(
+        summative: widget.summative,
+        aCid: widget.course.a_cid,
+      ),
+    );
+    controller.fetchLessons(widget.summative.dmod_sum_id);
+    controller.fetchStudents(widget.course.a_cid);
     super.initState();
   }
 
@@ -31,7 +43,8 @@ class _SummativeAssignmentPageState extends State<SummativeAssignmentPage> {
         child: Column(
           children: [
             TopBar(
-              title: 'courseTitle ',
+              type: 2,
+              title: widget.course.title1,
               subtitle: 'View Course / Assign Due Dates',
             ),
 
@@ -69,23 +82,23 @@ class SaveButton extends StatelessWidget {
           'Assign Due Dates',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
         ),
-        Row(
-          children: [
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xfff8fafc),
-              ),
-              child: Text('Cancel', style: TextStyle(color: Colors.black)),
-            ),
-            SizedBox(width: 10),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-              child: Text('Save', style: TextStyle(color: Colors.white)),
-            ),
-          ],
-        ),
+        // Row(
+        //   children: [
+        //     ElevatedButton(
+        //       onPressed: () {},
+        //       style: ElevatedButton.styleFrom(
+        //         backgroundColor: const Color(0xfff8fafc),
+        //       ),
+        //       child: Text('Cancel', style: TextStyle(color: Colors.black)),
+        //     ),
+        //     SizedBox(width: 10),
+        //     ElevatedButton(
+        //       onPressed: () {},
+        //       style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+        //       child: Text('Save', style: TextStyle(color: Colors.white)),
+        //     ),
+        //   ],
+        // ),
       ],
     );
   }

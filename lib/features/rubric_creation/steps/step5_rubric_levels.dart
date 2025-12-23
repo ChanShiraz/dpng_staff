@@ -1,3 +1,4 @@
+import 'package:dpng_staff/features/district_summative_library/widgets/summative_card.dart';
 import 'package:dpng_staff/features/rubric_creation/controller/rubric_controller.dart';
 import 'package:dpng_staff/features/rubric_creation/widgets/aligned_competencies_card.dart';
 import 'package:dpng_staff/features/rubric_creation/widgets/levels_section.dart';
@@ -5,8 +6,10 @@ import 'package:dpng_staff/features/rubric_creation/widgets/state_standard_card.
 import 'package:dpng_staff/features/summative_creation/controller/summative_creation_controller.dart'
     show levelColors;
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:get/utils.dart';
 
 class Step5RubricLevels extends GetView<RubricController> {
   const Step5RubricLevels({super.key});
@@ -30,7 +33,7 @@ class Step5RubricLevels extends GetView<RubricController> {
             ),
           ),
 
-          LevelsSection(),
+          RubricLevelChip(),
           const SizedBox(height: 16),
 
           /// COMPLETION STATUS
@@ -65,8 +68,33 @@ class Step5RubricLevels extends GetView<RubricController> {
                 Row(
                   children: [
                     OutlinedButton(
-                      onPressed: controller.step5Ready.value ? () {} : null,
-                      child: Text('Save Draft'),
+                      onPressed: controller.step5Ready.value
+                          ? () {
+                              controller.insertRubric(1);
+                              showDesktopToast(
+                                context,
+                                'Success! Rubric Submitted',
+                              );
+                              Get.back();
+                            }
+                          : null,
+                      child: Obx(
+                        () => controller.draftingRubric.value
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 30,
+                                ),
+                                child: SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 3,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              )
+                            : Text('Save Draft'),
+                      ),
                     ),
                     SizedBox(width: 10),
                     OutlinedButton(
@@ -78,10 +106,35 @@ class Step5RubricLevels extends GetView<RubricController> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
                       ),
-                      onPressed: controller.step5Ready.value ? () {} : null,
-                      child: Text(
-                        'Submit Rubric',
-                        style: TextStyle(color: Colors.white),
+                      onPressed: controller.step5Ready.value
+                          ? () async {
+                              await controller.insertRubric(0);
+                              showDesktopToast(
+                                context,
+                                'Success! Rubric Submitted',
+                              );
+                              Get.back();
+                            }
+                          : null,
+                      child: Obx(
+                        () => controller.insertingRubric.value
+                            ? Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 38,
+                                ),
+                                child: SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 3,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            : Text(
+                                'Submit Rubric',
+                                style: TextStyle(color: Colors.white),
+                              ),
                       ),
                     ),
                   ],
@@ -103,16 +156,19 @@ class RoundContainer extends StatelessWidget {
     required this.child,
     this.color,
     this.padding = 10,
-    this.circular = 10
+    this.circular = 10,
+    this.width,
   });
   final Widget child;
   final Color? color;
   final double padding;
   final double circular;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: width,
       padding: EdgeInsets.all(padding),
       decoration: BoxDecoration(
         color: color,

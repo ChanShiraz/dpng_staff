@@ -12,6 +12,7 @@ class SectionCard extends StatefulWidget {
   final VoidCallback? onNext;
   final VoidCallback? onBack;
   final ExpansibleController expansibleController;
+  final bool showFooter;
 
   const SectionCard({
     super.key,
@@ -24,6 +25,7 @@ class SectionCard extends StatefulWidget {
     required this.expansibleController,
     this.onNext,
     this.onBack,
+    this.showFooter = true,
   });
 
   @override
@@ -45,6 +47,7 @@ class _SectionCardState extends State<SectionCard> {
         ),
       ),
       child: ExpansionTile(
+        enabled: widget.locked ? false : true,
         onExpansionChanged: (value) {
           setState(() {});
         },
@@ -68,43 +71,38 @@ class _SectionCardState extends State<SectionCard> {
             children: [
               Divider(height: 1, color: Colors.grey[300]),
               Padding(padding: const EdgeInsets.all(16), child: widget.child),
-              Divider(height: 1, color: Colors.grey[300]),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // ElevatedButton(
-                    //   onPressed: onBack,
-                    //   style: ElevatedButton.styleFrom(
-                    //     backgroundColor: onBack == null
-                    //         ? Colors.grey[100]
-                    //         : Colors.white,
-                    //     foregroundColor: Colors.black87,
-                    //   ),
-                    //   child: const Text("Back"),
-                    // ),
-                    SizedBox(),
-                    ElevatedButton(
-                      onPressed: widget.onNext,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: widget.onNext == null
-                            ? Colors.grey[100]
-                            : const Color(0xFF57CC99),
-                        foregroundColor: Colors.black87,
-                      ),
-                      child: Text(
-                        "Next",
-                        style: widget.onNext == null
-                            ? null
-                            : TextStyle(color: Colors.white),
-                      ),
+              if (widget.showFooter)
+              Column(
+                children: [
+                  Divider(height: 1, color: Colors.grey[300]),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
                     ),
-                  ],
-                ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(),
+                        ElevatedButton(
+                          onPressed: widget.onNext,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: widget.onNext == null
+                                ? Colors.grey[100]
+                                : const Color(0xFF57CC99),
+                            foregroundColor: Colors.black87,
+                          ),
+                          child: Text(
+                            "Next",
+                            style: widget.onNext == null
+                                ? null
+                                : TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

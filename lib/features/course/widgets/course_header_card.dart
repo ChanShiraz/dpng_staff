@@ -2,13 +2,18 @@ import 'package:dpng_staff/features/home/models/course_model.dart';
 import 'package:flutter/material.dart';
 
 class CourseHeaderCard extends StatelessWidget {
-  const CourseHeaderCard({super.key, required this.course});
+  const CourseHeaderCard({
+    super.key,
+    required this.course,
+    required this.color,
+  });
   final CourseModel course;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.white,
+      color: color,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 1,
       child: Padding(
@@ -32,28 +37,21 @@ class CourseHeaderCard extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               '${course.title1} – Course Overview',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(height: 8),
-            Text(course.overview1, style: TextStyle(color: Colors.black54)),
+            Text(course.overview1, style: TextStyle(color: Colors.white54)),
 
             const SizedBox(height: 16),
             Row(
               children: const [
-                Icon(Icons.access_time, size: 18, color: Colors.black54),
+                Icon(Icons.people_alt_outlined, size: 18, color: Colors.white),
                 SizedBox(width: 6),
-                Text(
-                  'Tue, Thu · 11:00 AM–12:30 PM',
-                  style: TextStyle(color: Colors.black54),
-                ),
-                SizedBox(width: 16),
-                Icon(
-                  Icons.people_alt_outlined,
-                  size: 18,
-                  color: Colors.black54,
-                ),
-                SizedBox(width: 6),
-                Text('34 students', style: TextStyle(color: Colors.black54)),
+                Text('34 students', style: TextStyle(color: Colors.white)),
               ],
             ),
           ],

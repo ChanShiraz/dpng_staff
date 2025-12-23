@@ -1,4 +1,6 @@
 import 'package:dpng_staff/common/top_bar.dart';
+import 'package:dpng_staff/features/archive_summative_library/view/archive_summative_library_page.dart';
+import 'package:dpng_staff/features/district_summative_library/controller/dis_summative_lib_controller.dart';
 import 'package:dpng_staff/features/district_summative_library/models/summative_model.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/button_shadow.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/filter_dropdown.dart';
@@ -7,6 +9,7 @@ import 'package:dpng_staff/features/district_summative_library/widgets/search_ba
 import 'package:dpng_staff/features/district_summative_library/widgets/summative_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/instance_manager.dart';
 
 class DistrictSummativeLibraryPage extends StatefulWidget {
@@ -19,48 +22,12 @@ class DistrictSummativeLibraryPage extends StatefulWidget {
 
 class _DistrictSummativeLibraryPageState
     extends State<DistrictSummativeLibraryPage> {
-  SummativeModel? selected;
-
-  final List<SummativeModel> items = [
-    SummativeModel(
-      title: "Ecosystems – Project Brief",
-      subject: "Science",
-      standards: ["MS-LS2-3", "MS-LS2-4"],
-      competencies: ["Systems Thinking", "Scientific Inquiry"],
-      description:
-          "Design a mini-ecosystem and maintain a reflection journal on feedback loops.",
-      tags: ["Project", "Reflection"],
-      grade: "Grade 6",
-      author: "D. Patel",
-      example: "Reflection stems + self-assessment checklist.",
-    ),
-    SummativeModel(
-      title: "Informational Text Analysis – Common Prompt",
-      subject: "ELA",
-      standards: ["CCSS.ELA-LITERACY.RI.7.1", "CCSS.ELA-LITERACY.W.7.2"],
-      competencies: ["Close Reading", "Evidence Use"],
-      description: "Analyze informational text with common rubric and prompt.",
-      tags: ["Text Evidence", "CLB"],
-      grade: "Grade 8",
-      author: "Jefferson MS",
-      example: "Shared rubric across sections.",
-    ),
-    SummativeModel(
-      title: "Linear Functions – Performance Task",
-      subject: "Math",
-      standards: [
-        "CCSS.MATH.CONTENT.HSF.IF.B.4",
-        "CCSS.MATH.CONTENT.HSF.LE.A.1",
-      ],
-      competencies: ["Modeling", "Reasoning", "Communication"],
-      description:
-          "Use linear functions to model and solve real-world performance problems.",
-      tags: ["Performance", "Rubric-Aligned"],
-      grade: "Grade 9",
-      author: "All Schools",
-      example: "Student modeling and graph interpretation task.",
-    ),
-  ];
+  final controller = Get.put(DisSummativeLibController());
+  @override
+  void initState() {
+    controller.fetchSummatives();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +68,11 @@ class _DistrictSummativeLibraryPageState
                                 borderRadius: BorderRadiusGeometry.circular(15),
                               ),
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(ArchiveSummativeLibraryPage());
+                            },
                             child: Text(
-                              'Arcive',
+                              'Archive',
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
@@ -194,14 +163,23 @@ class _DistrictSummativeLibraryPageState
                         Expanded(
                           flex: 2,
                           child: SummativeList(
-                            items: items,
-                            onSelect: (s) => setState(() => selected = s),
-                            selected: selected,
+                            controller: controller,
+                            // items: items,
+                            onSelect: (s) {
+                              // setState(() => selected = s);
+                              controller.selectSummative(s);
+                            },
+                            selected: controller.selectedSummative.value,
                           ),
                         ),
                         Expanded(
                           flex: 1,
-                          child: PreviewPanel(summative: selected),
+                          child: Obx(
+                            () => PreviewPanel(
+                              controller: controller,
+                              summative: controller.selectedSummative.value,
+                            ),
+                          ),
                         ),
                       ],
                     ),

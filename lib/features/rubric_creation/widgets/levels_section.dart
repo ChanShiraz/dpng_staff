@@ -1,149 +1,81 @@
 import 'package:dpng_staff/features/rubric_creation/controller/rubric_controller.dart';
 import 'package:dpng_staff/features/rubric_creation/models/levels_data.dart';
+import 'package:dpng_staff/features/rubric_creation/steps/step5_rubric_levels.dart';
+import 'package:dpng_staff/features/summative_creation/controller/rubric_level_controller.dart';
+import 'package:dpng_staff/features/summative_creation/widgets/rubric_level_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/instance_manager.dart';
 import 'package:shimmer/shimmer.dart';
 
-class LevelsSection extends StatelessWidget {
-  LevelsSection({super.key});
-  final controller = Get.find<RubricController>();
+class RubricLevelChip extends StatelessWidget {
+  RubricLevelChip({super.key});
+  final controller = Get.put(RubricLevelController());
 
+  final levels = [
+    "Emerging",
+    "Capable",
+    "Bridging",
+    "Proficient",
+    "Metacognition",
+  ];
   @override
   Widget build(BuildContext context) {
-    return Obx(() {
-      final active = controller.activeLevel.value;
-      return controller.fetchingLevels.value
-          ? LevelsShimmer()
-          : Column(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Obx(
+          () => Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: levels.map((lvl) {
+              final colors = levelColors(lvl);
+              final selected = lvl == controller.activeLevel.value;
+              return ChoiceChip(
+                label: Text(lvl, style: TextStyle(color: colors['text'])),
+                selected: selected,
+                onSelected: (_) {
+                  controller.handleLevelSelect(lvl);
+                },
+                selectedColor: colors['bg'],
+                backgroundColor: Colors.white,
+                checkmarkColor: colors['text'],
+              );
+            }).toList(),
+          ),
+        ),
+        SizedBox(height: 10),
+        Obx(
+          () => Container(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: controller.levels.map((level) {
-                    final selected = active == level;
-
-                    return ChoiceChip(
-                      checkmarkColor: Colors.white,
-                      label: Text(level.label),
-                      selected: selected,
-                      onSelected: (_) => controller.setLevel(level),
-                      selectedColor: Colors.blue.shade600,
-                      backgroundColor: Colors.grey.shade200,
-                      labelStyle: TextStyle(
-                        color: selected ? Colors.white : Colors.black87,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    );
-                  }).toList(),
+                Text(
+                  controller.activeLevel.value,
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),
                 ),
-
-                const SizedBox(height: 16),
-
-                /// ACTIVE LEVEL TEXT AREA
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade300),
+                SizedBox(height: 5),
+                TextField(
+                  maxLines: 6,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: "Enter task-specific success criteria...",
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        active.label,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-
-                      TextField(
-                        readOnly: true,
-                        minLines: 3,
-                        maxLines: 10,
-                        style: TextStyle(fontSize: 14),
-                        textAlignVertical: TextAlignVertical.top,
-                        // controller:
-                        //     TextEditingController(text: controller.rubricText[active])
-                        //       ..selection = TextSelection.fromPosition(
-                        //         TextPosition(
-                        //           offset: controller.rubricText[active]!.length,
-                        //         ),
-                        //       ),
-                        // onChanged: (v) => controller.updateText(active, v),
-                        decoration: InputDecoration(
-                          hintText: _hintForLevel(
-                            controller.levelsData.value,
-                            active.key,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      controller.standardsData.isNotEmpty
-                          ? Text(
-                              _helperForLevel(active.label),
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(color: Colors.grey.shade700),
-                            )
-                          : SizedBox(),
-                    ],
-                  ),
+                  controller: controller.getTextController(),
                 ),
               ],
-            );
-    });
-  }
-
-  String _hintForLevel(LevelsData? data, String key) {
-    if (data == null) return '';
-
-    final item = data.items.firstWhere(
-      (e) => e.key == key,
-      orElse: () => LevelItem(key: '', label: '', text: ''),
+            ),
+          ),
+        ),
+      ],
     );
-
-    return item.text;
-  }
-
-  String _helperForLevel(String level) {
-    switch (level) {
-      case 'Emerging':
-        return controller.standardsData
-                .firstWhereOrNull((e) => e.dplvlid == 2)
-                ?.rubric_description ??
-            '';
-      case 'Capable':
-        return controller.standardsData
-                .firstWhereOrNull((e) => e.dplvlid == 3)
-                ?.rubric_description ??
-            '';
-      case 'Bridging':
-        return controller.standardsData
-                .firstWhereOrNull((e) => e.dplvlid == 4)
-                ?.rubric_description ??
-            '';
-      case 'Proficient':
-        return controller.standardsData
-                .firstWhereOrNull((e) => e.dplvlid == 5)
-                ?.rubric_description ??
-            '';
-
-      case 'Metacognition':
-        return controller.standardsData
-                .firstWhereOrNull((e) => e.dplvlid == 6)
-                ?.rubric_description ??
-            '';
-      default:
-        return '';
-    }
   }
 }
 

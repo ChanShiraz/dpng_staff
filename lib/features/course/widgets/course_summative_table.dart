@@ -1,5 +1,6 @@
 import 'package:dpng_staff/features/course/controller/course_overview_controller.dart';
 import 'package:dpng_staff/features/course/widgets/summatives_shimmer.dart';
+import 'package:dpng_staff/features/home/models/course_model.dart';
 import 'package:dpng_staff/features/student_roster/widgets/roster_table.dart';
 import 'package:dpng_staff/features/student_roster/widgets/student_tile.dart';
 import 'package:dpng_staff/features/summative_assignment/view/summative_assignment_page.dart';
@@ -9,17 +10,16 @@ import 'package:get/utils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CourseSummativeTable extends StatelessWidget {
-  const CourseSummativeTable({super.key, required this.controller});
+  const CourseSummativeTable({
+    super.key,
+    required this.controller,
+    required this.course,
+  });
   final CourseOverviewController controller;
+  final CourseModel course;
 
   @override
   Widget build(BuildContext context) {
-    // final rows = [
-    //   ['Economic Terms/Concepts 25–26', '25', '11', '0', '34', '2'],
-    //   ['Building A Résumé & Cover Letter 25–26', '20', '16', '0', '34', '2'],
-    //   ['Incentives, Supply & Demand 25–26', '21', '15', '0', '34', '2'],
-    // ];
-
     return Card(
       color: Colors.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -35,7 +35,7 @@ class CourseSummativeTable extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Obx(
-              () => controller.loadingSummatives.value
+              () => controller.fetchingSummatives.value
                   ? SummativesShimmer()
                   // StudentRosterShimmer(qty: 4)
                   : SingleChildScrollView(
@@ -46,10 +46,10 @@ class CourseSummativeTable extends StatelessWidget {
                         ),
                         columns: const [
                           DataColumn(label: Text('Title')),
-                          DataColumn(label: Text('Submissions')),
-                          DataColumn(label: Text('Non-Submissions')),
+                          DataColumn(label: Text('Assessed/Accepted')),
+                          DataColumn(label: Text('Pending')),
                           DataColumn(label: Text('Resubmits')),
-                          DataColumn(label: Text('Assigned')),
+                          DataColumn(label: Text('Past Due')),
                           DataColumn(label: Text('Not Assigned')),
                           DataColumn(label: Text('Tools')),
                         ],
@@ -73,13 +73,27 @@ class CourseSummativeTable extends StatelessWidget {
                                       child: Text(
                                         '2',
                                         style: const TextStyle(
-                                          color: Colors.red,
+                                          color: Colors.blue,
                                         ),
                                       ),
                                     ),
                                   ),
-                                  DataCell(Center(child: Text('3'))),
-                                  DataCell(Center(child: Text('4'))),
+                                  DataCell(
+                                    Center(
+                                      child: Text(
+                                        '3',
+                                        style: TextStyle(color: Colors.orange),
+                                      ),
+                                    ),
+                                  ),
+                                  DataCell(
+                                    Center(
+                                      child: Text(
+                                        '4',
+                                        style: TextStyle(color: Colors.red),
+                                      ),
+                                    ),
+                                  ),
                                   DataCell(Center(child: Text('5'))),
                                   DataCell(
                                     Center(
@@ -120,6 +134,7 @@ class CourseSummativeTable extends StatelessWidget {
                                                 Get.to(
                                                   SummativeAssignmentPage(
                                                     summative: e,
+                                                    course: course,
                                                   ),
                                                 );
                                               },

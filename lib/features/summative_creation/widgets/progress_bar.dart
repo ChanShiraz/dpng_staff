@@ -4,35 +4,63 @@ class ProgressBar extends StatelessWidget {
   final int? openStep;
   final bool step1Complete;
   final bool step2Complete;
+  final bool step3Complete;
   final Function(int) onStepTap;
   const ProgressBar({
     super.key,
     required this.openStep,
     required this.step1Complete,
     required this.step2Complete,
+    required this.step3Complete,
     required this.onStepTap,
   });
   @override
   Widget build(BuildContext context) {
+    StepStatus step1Status;
+    StepStatus step2Status;
+    StepStatus step3Status;
+    if (step1Complete) {
+      step1Status = StepStatus.completed;
+    } else {
+      step1Status = StepStatus.active;
+    }
+
+    // STEP 2
+    if (!step1Complete) {
+      step2Status = StepStatus.inactive;
+    } else if (step2Complete) {
+      step2Status = StepStatus.completed;
+    } else {
+      step2Status = StepStatus.active;
+    }
+
+    // STEP 3
+    if (!step2Complete) {
+      step3Status = StepStatus.inactive;
+    } else if (step3Complete) {
+      step3Status = StepStatus.completed;
+    } else {
+      step3Status = StepStatus.active;
+    }
     return ProgressStepper(
       steps: [
         StepData(
           stepNumber: 1,
           title: 'Scope',
           subtitle: 'Main DP Alignment',
-          status: StepStatus.completed,
+          status: step1Status,
         ),
         StepData(
           stepNumber: 2,
           title: 'Rubric',
           subtitle: 'Competencies & Standards',
-          status: StepStatus.active,
+          status: step2Status,
         ),
         StepData(
           stepNumber: 3,
           title: 'Details',
           subtitle: 'Title • Deliverable • Rubric',
-          status: StepStatus.inactive,
+          status: step3Status,
         ),
       ],
     );

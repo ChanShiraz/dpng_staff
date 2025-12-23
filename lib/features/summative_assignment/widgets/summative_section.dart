@@ -3,8 +3,8 @@ import 'package:dpng_staff/features/summative_assignment/widgets/datefield.dart'
 import 'package:flutter/material.dart';
 
 class SummativeSection extends StatelessWidget {
-  const SummativeSection({super.key,required this.summative});
-final Summative summative;
+  const SummativeSection({super.key, required this.summative});
+  final Summative summative;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -21,8 +21,12 @@ final Summative summative;
           ),
           _DataRow(
             title: summative.title,
-            description:
-                summative.task,
+            description: summative.task,
+            onDatePicked: (p0) {
+              if (p0 != null) {
+                summative.dueDate = p0;
+              }
+            },
           ),
         ],
       ),
@@ -33,8 +37,13 @@ final Summative summative;
 class _DataRow extends StatelessWidget {
   final String title;
   final String description;
+  final Function(DateTime?) onDatePicked;
 
-  const _DataRow({required this.title, required this.description});
+  const _DataRow({
+    required this.title,
+    required this.description,
+    required this.onDatePicked,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +71,12 @@ class _DataRow extends StatelessWidget {
               ),
             ),
           ),
-          const Expanded(
+          Expanded(
             flex: 1,
-            child: Align(alignment: Alignment.centerRight, child: DateField()),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: DateField(onDateSelected: onDatePicked),
+            ),
           ),
         ],
       ),

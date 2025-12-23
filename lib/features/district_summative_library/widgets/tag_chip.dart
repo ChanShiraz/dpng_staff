@@ -19,7 +19,7 @@ class TagChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(right: 4, bottom: 4),
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 7, vertical: 2),
       decoration: BoxDecoration(
         border: showBorder
             ? BoxBorder.all(color: borderColor ?? Colors.grey.shade50)

@@ -1,3 +1,4 @@
+import 'package:dpng_staff/features/rubric_creation/steps/step5_rubric_levels.dart';
 import 'package:flutter/material.dart';
 
 class SectionCard extends StatefulWidget {
@@ -29,10 +30,11 @@ class _SectionCardState extends State<SectionCard> {
   Widget build(BuildContext context) {
     return Opacity(
       opacity: widget.locked ? 0.6 : 1,
-      child: Card(
+      child: RoundContainer(
         color: Colors.white,
-        elevation: 1,
-        margin: const EdgeInsets.only(bottom: 12),
+        circular: 20,
+        // elevation: 1,
+        // margin: const EdgeInsets.only(bottom: 12),
         child: Theme(
           data: Theme.of(context).copyWith(
             dividerColor: Colors.transparent, // hide divider line
@@ -55,7 +57,7 @@ class _SectionCardState extends State<SectionCard> {
                   ? Icons.check_circle
                   : widget.locked
                   ? Icons.lock
-                  : Icons.book_outlined,
+                  : Icons.menu_book_rounded,
               color: widget.completed
                   ? Colors.green
                   : widget.locked
@@ -74,9 +76,7 @@ class _SectionCardState extends State<SectionCard> {
               isExpanded ? Icons.expand_less : Icons.expand_more,
               color: Colors.grey,
             ),
-            children: [
-              Padding(padding: const EdgeInsets.all(16.0), child: widget.child),
-            ],
+            children: [widget.child],
           ),
         ),
       ),
