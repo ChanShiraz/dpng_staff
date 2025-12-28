@@ -1,6 +1,7 @@
 import 'package:dpng_staff/features/%20district_rubric_library/pages/district_rubric_library_page.dart';
 import 'package:dpng_staff/features/auth/controller/user_controller.dart';
 import 'package:dpng_staff/features/auth/widgets/logout_dialog.dart';
+import 'package:dpng_staff/features/chat/view/course_chat_page.dart';
 import 'package:dpng_staff/features/district_summative_library/view/district_summative_library_page.dart';
 import 'package:dpng_staff/features/grades/pages/grades_page.dart';
 import 'package:dpng_staff/features/lesson_builder/view/lesson_builder_page.dart';
@@ -58,7 +59,11 @@ class Sidebar extends StatelessWidget {
                   // SizedBox(height: 16),
                   // _SidebarIcon(icon: Icons.menu_book, lable: 'Home'),
                   SizedBox(height: 16),
-                  _SidebarIcon(icon: Icons.message, lable: 'Chat'),
+                  _SidebarIcon(
+                    icon: Icons.chat_bubble_outline_rounded,
+                    lable: 'Chat',
+                    onTap: () => Get.to(CourseChatPage()),
+                  ),
                   SizedBox(height: 16),
                   _SidebarIcon(
                     icon: Icons.rocket,

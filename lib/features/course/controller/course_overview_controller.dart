@@ -9,12 +9,12 @@ class CourseOverviewController extends GetxController {
   final supabase = Supabase.instance.client;
   RxList<Summative> summatives = <Summative>[].obs;
   RxBool fetchingSummatives = false.obs;
-
-  
+  RxString fetchingSummativeError = ''.obs;
 
   void fetchSummatives(int aCid) async {
     summatives.clear();
     fetchingSummatives.value = true;
+    fetchingSummativeError.value = '';
     try {
       final query = supabase
           .from('alt_mod_summatives')
@@ -26,10 +26,9 @@ class CourseOverviewController extends GetxController {
         summatives.add(Summative.fromMap(element));
       }
     } catch (e) {
-      print('error fetching course summatives $e');
+      fetchingSummativeError.value = 'Error fetching summatives';
+      debugPrint('error fetching course summatives $e');
     }
     fetchingSummatives.value = false;
   }
-
- 
 }

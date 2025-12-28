@@ -150,12 +150,14 @@ class SummativeTextDialog extends StatelessWidget {
 
 class RichTextInput extends StatelessWidget {
   final QuillController controller;
-  final String label;
+  final String? label;
+  final bool showToolBar;
 
   const RichTextInput({
     super.key,
     required this.controller,
     required this.label,
+    this.showToolBar = true,
   });
 
   @override
@@ -163,44 +165,48 @@ class RichTextInput extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label),
+        label != null ? Text(label!) : SizedBox(),
         const SizedBox(height: 8),
 
         /// Toolbar
-        Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xffE2E8F0)),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-          ),
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: QuillSimpleToolbar(
-              controller: controller,
-              config: const QuillSimpleToolbarConfig(
-                showListCheck: false,
-                showInlineCode: false,
-                showSubscript: false,
-                showSuperscript: false,
-                showFontFamily: false,
-                showFontSize: false,
-                showColorButton: false,
-                showBackgroundColorButton: false,
-                showAlignmentButtons: false,
-                showCodeBlock: false,
-                showQuote: false,
-                showLink: false,
-                showUndo: false,
-                showRedo: false,
-                showStrikeThrough: false,
-                showClearFormat: false,
-                showHeaderStyle: false,
-                showIndent: false,
-                showSearchButton: false,
-              ),
-            ),
-          ),
-        ),
+        showToolBar
+            ? Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xffE2E8F0)),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(12),
+                  ),
+                ),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: QuillSimpleToolbar(
+                    controller: controller,
+                    config: const QuillSimpleToolbarConfig(
+                      showListCheck: false,
+                      showInlineCode: false,
+                      showSubscript: false,
+                      showSuperscript: false,
+                      showFontFamily: false,
+                      showFontSize: false,
+                      showColorButton: false,
+                      showBackgroundColorButton: false,
+                      showAlignmentButtons: false,
+                      showCodeBlock: false,
+                      showQuote: false,
+                      showLink: false,
+                      showUndo: false,
+                      showRedo: false,
+                      showStrikeThrough: false,
+                      showClearFormat: false,
+                      showHeaderStyle: false,
+                      showIndent: false,
+                      showSearchButton: false,
+                    ),
+                  ),
+                ),
+              )
+            : SizedBox.fromSize(),
 
         /// Editor
         Container(

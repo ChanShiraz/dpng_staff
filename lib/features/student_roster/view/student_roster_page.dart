@@ -1,6 +1,6 @@
 import 'package:dpng_staff/common/top_bar.dart';
 import 'package:dpng_staff/features/assess_formative/widgets/topbar.dart';
-import 'package:dpng_staff/features/student_roster/controllers/student_roster_controller.dart';
+import 'package:dpng_staff/features/student_roster/controllers/student_roaster_controller.dart';
 import 'package:dpng_staff/features/student_roster/widgets/roster_search_filter_bar.dart';
 import 'package:dpng_staff/features/student_roster/widgets/roster_table.dart';
 import 'package:dpng_staff/features/student_roster/widgets/student_tile.dart';
@@ -15,11 +15,11 @@ class StudentRosterPage extends StatefulWidget {
 }
 
 class _StudentRosterPageState extends State<StudentRosterPage> {
-  late StudentRosterController studentRoasterController;
+  late StudentRoasterController studentRoasterController;
 
   @override
   void initState() {
-    studentRoasterController = Get.put(StudentRosterController());
+    studentRoasterController = Get.put(StudentRoasterController());
     super.initState();
   }
 

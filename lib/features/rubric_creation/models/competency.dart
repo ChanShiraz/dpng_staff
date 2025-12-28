@@ -6,6 +6,7 @@ class Competency {
   final String dpc_label;
   final String dpc_heading;
   final String dpc_description;
+  int? selectedLevel;
   String scope;
   Competency({
     required this.dpcid,

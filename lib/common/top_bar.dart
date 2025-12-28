@@ -10,11 +10,13 @@ class TopBar extends StatelessWidget {
     this.subtitle,
     this.trailing,
     this.type = 1,
+    this.centerTitle = false,
   });
   final String title;
   final int type;
   final String? subtitle;
   final Widget? trailing;
+  final bool centerTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,16 @@ class TopBar extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              type == 1
+              centerTitle == true
+                  ? Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xff0f172a),
+                      ),
+                    )
+                  : type == 1
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

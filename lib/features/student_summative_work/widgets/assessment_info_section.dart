@@ -1,3 +1,4 @@
+import 'package:dpng_staff/features/assess_summative/widgets/history_card.dart';
 import 'package:dpng_staff/features/student_summative_work/models/summative_submission.dart';
 import 'package:dpng_staff/features/student_summative_work/widgets/info_row.dart';
 import 'package:dpng_staff/features/student_summative_work/widgets/label_chip.dart';
@@ -89,13 +90,41 @@ class AssessmentInfoSection extends StatelessWidget {
           textColor: Colors.white,
         ),
         SizedBox(height: 12),
-        InfoGroup(
-          title: "DP Competency Assessed",
-          subtitle: "S07 – Scientific Systems",
-          badge: "Proficient",
-          badgeColor: Color(0xffEEF2FF),
-          textColor: Colors.indigo,
+
+        // ListView.builder(
+        //   physics: NeverScrollableScrollPhysics(),
+        //   itemCount: submission.competencies.length,
+        //   itemBuilder: (context, index) {
+        //     return InfoGroup(
+        //       title:
+        //           '${submission.competencies[index].dpc_label} ${submission.competencies[index].dpc_heading}',
+        //       subtitle: submission.competencies[index].dpc_description,
+        //       badge: submission.competencies[index].assessment.toString(),
+        //       badgeColor: Color(0xffEEF2FF),
+        //       textColor: Colors.indigo,
+        //     );
+        //   },
+        // ),
+        Text(
+          'DP Competency Assessed',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            color: Colors.grey.shade700,
+          ),
         ),
+        ...submission.competencies.map(
+          (c) => Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: InfoGroup(
+              title: null,
+              subtitle: '${c.dpc_label} - ${c.dpc_heading}',
+              badge: getGradeLabel(c.assessment.toDouble()),
+              badgeColor: const Color(0xffEEF2FF),
+              textColor: Colors.indigo,
+            ),
+          ),
+        ),
+
         SizedBox(height: 12),
         InfoGroup(
           title: "State Standard Assessed",
@@ -139,7 +168,7 @@ class AssessmentInfoSection extends StatelessWidget {
 
 // A small reusable group used in right column (keeps layout tidy)
 class InfoGroup extends StatelessWidget {
-  final String title;
+  final String? title;
   final String? subtitle;
   final String badge;
   final Color badgeColor;
@@ -159,13 +188,14 @@ class InfoGroup extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            color: Colors.grey.shade700,
+        if (title != null)
+          Text(
+            title!,
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade700,
+            ),
           ),
-        ),
         if (subtitle != null) const SizedBox(height: 4),
         if (subtitle != null)
           Text(

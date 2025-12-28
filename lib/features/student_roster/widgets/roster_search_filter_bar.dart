@@ -1,4 +1,4 @@
-import 'package:dpng_staff/features/student_roster/controllers/student_roster_controller.dart';
+import 'package:dpng_staff/features/student_roster/controllers/student_roaster_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 
@@ -7,7 +7,7 @@ class RosterSearchFilterBar extends StatelessWidget {
     super.key,
     required this.studentRoasterController,
   });
-  final StudentRosterController studentRoasterController;
+  final StudentRoasterController studentRoasterController;
 
   @override
   Widget build(BuildContext context) {

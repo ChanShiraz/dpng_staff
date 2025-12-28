@@ -38,7 +38,7 @@ class _SummativeWorkDetailsPageState extends State<SummativeWorkDetailsPage> {
   @override
   void initState() {
     widget.detailController = Get.put(SummativeWorkDetailController());
-    widget.detailController.loadSummativeSubmission(widget.subid);
+    widget.detailController.fetchSummativeSubmission(widget.subid);
     super.initState();
   }
 
@@ -57,7 +57,7 @@ class _SummativeWorkDetailsPageState extends State<SummativeWorkDetailsPage> {
             Obx(() {
               SummativeSubmission? submission =
                   widget.detailController.submission.value;
-              return widget.detailController.isLoading.value
+              return widget.detailController.fetchingSummative.value
                   ? CircularProgressIndicator()
                   : submission != null
                   ? Expanded(

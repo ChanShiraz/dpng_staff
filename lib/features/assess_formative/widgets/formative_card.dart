@@ -1,7 +1,13 @@
+import 'package:dpng_staff/common/url_helper.dart';
+import 'package:dpng_staff/features/assess_summative/widgets/text_dialog.dart';
+import 'package:dpng_staff/features/assessment_center/models/formative_assessment.dart';
+import 'package:dpng_staff/features/district_summative_library/widgets/summative_card.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class FormativeCard extends StatelessWidget {
-  const FormativeCard({super.key});
+  const FormativeCard({super.key, required this.assessment});
+  final FormativeAssessment assessment;
 
   @override
   Widget build(BuildContext context) {
@@ -14,27 +20,53 @@ class FormativeCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Vince C. (Sofia) Ochoa • Economics", style: TextStyle()),
+          Text("${assessment.last} • ${assessment.title1}", style: TextStyle()),
           const SizedBox(height: 8),
           Divider(),
           const SizedBox(height: 8),
-          const Text(
-            "Formative Assessment – What is economics",
+          Text(
+            assessment.title,
             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text("Description\nChecking for understanding"),
-              Text("Date Submitted\n2025-10-16"),
+            children: [
+              Text(assessment.description ?? ''),
               Text(
-                "Open",
-                style: TextStyle(
-                  // color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                ),
+                "Date Submitted\n${DateFormat('yyyy-MM-dd').format(assessment.date)}",
               ),
+              assessment.type == 2
+                  ? OutlinedButton.icon(
+                      onPressed: () async {
+                        try {
+                          if (assessment.pathLink != null) {
+                            await UrlHelper.launch(assessment.pathLink!);
+                          }
+                          debugPrint('link ${assessment.pathLink}');
+                        } catch (e) {
+                          showDesktopToast(context, 'Unable to open link');
+                        }
+                      },
+                      label: Text(
+                        "View Link",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          // decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    )
+                  : OutlinedButton.icon(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) =>
+                              TextDialog(initialText: assessment.text),
+                        );
+                      },
+                      label: Text('View'),
+                      icon: Icon(Icons.text_snippet_outlined),
+                    ),
             ],
           ),
           const SizedBox(height: 12),

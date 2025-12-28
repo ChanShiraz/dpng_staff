@@ -7,7 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class SummativeController extends GetxController {
   final supbase = Supabase.instance.client;
   final currentUser = Get.find<UserController>().currentUser.value;
-  final learningYear = Get.find<UserController>().learningYear.value;
+  //final learningYear = Get.find<UserController>().learningYear.value;
   RxBool isLoading = false.obs;
   int y = 0;
   int x = 0;
@@ -41,11 +41,13 @@ class SummativeController extends GetxController {
           .select('subid,a_cid, alt_courses(active),status,grade')
           .eq('assessed_by', currentUser!.userId!)
           .eq('alt_courses.active', 1)
-          .eq('learning_year', learningYear)
-          .gte('date', DateHelper.weekStart())
-          .lte('date', DateHelper.weekEnd());
-      final xResponse = await xQuery;
+          .eq('learning_year', Get.find<UserController>().learningYear.value)
+      .gte('date', DateHelper.weekStart())
+      .lte('date', DateHelper.weekEnd())
+      ;
 
+      final xResponse = await xQuery;
+      print('xResponse $xResponse');
       y = xResponse.length;
       x = 0;
       for (var element in xResponse) {

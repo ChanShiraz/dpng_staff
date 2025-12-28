@@ -1,10 +1,14 @@
+import 'package:dpng_staff/features/assessment_center/models/summative_assessment.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class StudentSnapshotCard extends StatelessWidget {
-  const StudentSnapshotCard({super.key});
+  const StudentSnapshotCard({super.key, required this.summative});
+  final SummativeAssessment summative;
 
   @override
   Widget build(BuildContext context) {
+    final DateFormat df = DateFormat('yyyy-MM-dd');
     return _cardWrapper(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -13,16 +17,19 @@ class StudentSnapshotCard extends StatelessWidget {
             "Student Snapshot",
             style: TextStyle(fontWeight: FontWeight.w500),
           ),
-        
+
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 6),
             child: Divider(),
           ),
-          
-          _infoText("Student:", "Vince C. (Sofia Ochoa)"),
-          _infoText("Course:", "Economics"),
-          _infoText("Track:", "Track B"),
-          _infoText("Submitted:", "2025-10-16"),
+
+          _infoText("Student:", "${summative.first} ${summative.last}"),
+          _infoText("Course:", summative.title1),
+          _infoText(
+            "Track:",
+            summative.course_type == 4 ? "Track A" : "Track B",
+          ),
+          _infoText("Submitted:", df.format(summative.date)),
         ],
       ),
     );

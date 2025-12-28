@@ -1,7 +1,12 @@
+import 'package:dpng_staff/features/assess_formative/controller/assess_formative_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/get_core.dart';
 
 class AssessmentToolCard extends StatelessWidget {
-  const AssessmentToolCard({super.key});
+  AssessmentToolCard({super.key, required this.fsubid});
+  final controller = Get.find<AssessFormativeController>();
+  final int fsubid;
 
   @override
   Widget build(BuildContext context) {
@@ -65,30 +70,48 @@ class AssessmentToolCard extends StatelessWidget {
                     'Overall Formative Decision',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                   ),
-                  Row(
-                    children: [
-                      OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.white,
+                  Obx(
+                    () => Row(
+                      children: [
+                        OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: controller.finalStatus.value == 1
+                                ? Colors.black
+                                : Colors.white,
+                          ),
+                          onPressed: () {
+                            controller.finalStatus.value = 1;
+                          },
+                          child: Text(
+                            'SATISFACTORY',
+                            style: TextStyle(
+                              color: controller.finalStatus.value == 1
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
                         ),
-                        onPressed: () {},
-                        child: const Text(
-                          'SATISFACTORY',
-                          style: TextStyle(color: Colors.black),
+                        const SizedBox(width: 8),
+                        OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: controller.finalStatus.value == 2
+                                ? Colors.black
+                                : Colors.white,
+                          ),
+                          onPressed: () {
+                            controller.finalStatus.value = 2;
+                          },
+                          child: Text(
+                            'RESUBMIT',
+                            style: TextStyle(
+                              color: controller.finalStatus.value == 2
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                        ),
-                        onPressed: () {},
-                        child: const Text(
-                          'RESUBMIT',
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -97,6 +120,7 @@ class AssessmentToolCard extends StatelessWidget {
             Text('Comment to student', style: TextStyle(color: Colors.black54)),
             SizedBox(height: 10),
             TextField(
+              controller: controller.commentController,
               minLines: 4,
               keyboardType: TextInputType.multiline,
               maxLines: null,
@@ -117,10 +141,26 @@ class AssessmentToolCard extends StatelessWidget {
               alignment: Alignment.centerRight,
               child: FilledButton(
                 style: FilledButton.styleFrom(backgroundColor: Colors.black),
-                onPressed: () {},
-                child: const Text(
-                  'Submit Assessment',
-                  style: TextStyle(color: Colors.white),
+                onPressed: () {
+                  controller.assessFormative(fsubid);
+                },
+                child: Obx(
+                  () => controller.assessingFormative.value
+                      ? Padding(
+                          padding: EdgeInsetsGeometry.symmetric(horizontal: 57),
+                          child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 3,
+                              color: Colors.white,
+                            ),
+                          ),
+                        )
+                      : const Text(
+                          'Submit Assessment',
+                          style: TextStyle(color: Colors.white),
+                        ),
                 ),
               ),
             ),

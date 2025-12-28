@@ -1,6 +1,5 @@
 import 'package:dpng_staff/common/top_bar.dart';
 import 'package:dpng_staff/features/student_roster/controllers/roster_student_controller.dart';
-import 'package:dpng_staff/features/student_roster/controllers/student_roster_controller.dart';
 import 'package:dpng_staff/features/student_roster/models/roster_student.dart';
 import 'package:dpng_staff/features/student_roster/widgets/student_tile.dart';
 import 'package:flutter/material.dart';

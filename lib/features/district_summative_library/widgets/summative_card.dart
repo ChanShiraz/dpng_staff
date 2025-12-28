@@ -162,7 +162,7 @@ class SummativeCard extends StatelessWidget {
                         SizedBox(width: 8),
                         IconButton(
                           onPressed: () {
-                            Get.to(LessonBuilderPage(summative: item,));
+                            Get.to(LessonBuilderPage(summative: item));
                           },
                           icon: Icon(Icons.add_chart_rounded),
                         ),
@@ -206,6 +206,37 @@ class SummativeCard extends StatelessWidget {
 }
 
 void showDesktopToast(BuildContext context, String message) {
+  final context = Get.overlayContext ?? Get.context;
+  if (context == null) return;
+  final overlay = Overlay.of(context);
+  late OverlayEntry entry;
+
+  entry = OverlayEntry(
+    builder: (context) => Center(
+      child: Material(
+        color: Colors.transparent,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.black87,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Text(message, style: const TextStyle(color: Colors.white)),
+        ),
+      ),
+    ),
+  );
+
+  overlay.insert(entry);
+
+  Future.delayed(const Duration(seconds: 2), () {
+    entry.remove();
+  });
+}
+
+void showDesktopToast2(String message) {
+  final context = Get.overlayContext ?? Get.context;
+  if (context == null) return;
   final overlay = Overlay.of(context);
   late OverlayEntry entry;
 

@@ -19,10 +19,10 @@ class CalendarPanel extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Divider(),
-            const Text(
-              'Next: Grading block · Fri 1:00–1:30 PM',
-              style: TextStyle(fontSize: 13, color: Colors.black54),
-            ),
+            //   const Text(
+            //     'Next: Grading block · Fri 1:00–1:30 PM',
+            //     style: TextStyle(fontSize: 13, color: Colors.black54),
+            //   ),
           ],
         ),
       ),

@@ -34,129 +34,143 @@ class CourseSummativeTable extends StatelessWidget {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 12),
-            Obx(
-              () => controller.fetchingSummatives.value
-                  ? SummativesShimmer()
-                  // StudentRosterShimmer(qty: 4)
-                  : SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: DataTable(
-                        headingRowColor: WidgetStatePropertyAll(
-                          Colors.grey.shade100,
-                        ),
-                        columns: const [
-                          DataColumn(label: Text('Title')),
-                          DataColumn(label: Text('Assessed/Accepted')),
-                          DataColumn(label: Text('Pending')),
-                          DataColumn(label: Text('Resubmits')),
-                          DataColumn(label: Text('Past Due')),
-                          DataColumn(label: Text('Not Assigned')),
-                          DataColumn(label: Text('Tools')),
-                        ],
-                        rows: controller.summatives
-                            .map(
-                              (e) => DataRow(
-                                cells: [
-                                  DataCell(Text(e.title)),
-                                  DataCell(
-                                    Center(
-                                      child: Text(
-                                        '1',
-                                        style: const TextStyle(
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Center(
-                                      child: Text(
-                                        '2',
-                                        style: const TextStyle(
-                                          color: Colors.blue,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Center(
-                                      child: Text(
-                                        '3',
-                                        style: TextStyle(color: Colors.orange),
-                                      ),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Center(
-                                      child: Text(
-                                        '4',
-                                        style: TextStyle(color: Colors.red),
-                                      ),
-                                    ),
-                                  ),
-                                  DataCell(Center(child: Text('5'))),
-                                  DataCell(
-                                    Center(
-                                      child: Center(
-                                        child: Row(
-                                          children: [
-                                            OutlinedButton(
-                                              onPressed: () {},
-                                              child: Text(
-                                                'Edit',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 10),
-                                            OutlinedButton(
-                                              onPressed: () {},
-                                              child: Text(
-                                                'Grade',
-                                                style: TextStyle(
-                                                  color: Colors.black,
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 10),
-                                            ElevatedButton(
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: Colors.black,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadiusGeometry.circular(
-                                                        10,
-                                                      ),
-                                                ),
-                                              ),
-                                              onPressed: () {
-                                                Get.to(
-                                                  SummativeAssignmentPage(
-                                                    summative: e,
-                                                    course: course,
-                                                  ),
-                                                );
-                                              },
-                                              child: Text(
-                                                'Assign',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                            .toList(),
+            Obx(() {
+              if (controller.fetchingSummatives.value) {
+                return SummativesShimmer();
+              }
+              if (controller.fetchingSummativeError.value.isNotEmpty) {
+                return Center(
+                  child: Column(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          controller.fetchSummatives(course.a_cid);
+                        },
+                        icon: Icon(Icons.refresh),
                       ),
-                    ),
-            ),
+                      Text(
+                        controller.fetchingSummativeError.value,
+                        style: TextStyle(color: Colors.red, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              if (controller.summatives.isEmpty) {
+                return const Center(
+                  child: Text(
+                    'No summatives found.',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                );
+              }
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  headingRowColor: WidgetStatePropertyAll(Colors.grey.shade100),
+                  columns: const [
+                    DataColumn(label: Text('Title')),
+                    DataColumn(label: Text('Assessed/Accepted')),
+                    DataColumn(label: Text('Pending')),
+                    DataColumn(label: Text('Resubmits')),
+                    DataColumn(label: Text('Past Due')),
+                    DataColumn(label: Text('Not Assigned')),
+                    DataColumn(label: Text('Tools')),
+                  ],
+                  rows: controller.summatives
+                      .map(
+                        (e) => DataRow(
+                          cells: [
+                            DataCell(Text(e.title)),
+                            DataCell(
+                              Center(
+                                child: Text(
+                                  '1',
+                                  style: const TextStyle(color: Colors.green),
+                                ),
+                              ),
+                            ),
+                            DataCell(
+                              Center(
+                                child: Text(
+                                  '2',
+                                  style: const TextStyle(color: Colors.blue),
+                                ),
+                              ),
+                            ),
+                            DataCell(
+                              Center(
+                                child: Text(
+                                  '3',
+                                  style: TextStyle(color: Colors.orange),
+                                ),
+                              ),
+                            ),
+                            DataCell(
+                              Center(
+                                child: Text(
+                                  '4',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ),
+                            DataCell(Center(child: Text('5'))),
+                            DataCell(
+                              Center(
+                                child: Center(
+                                  child: Row(
+                                    children: [
+                                      OutlinedButton(
+                                        onPressed: () {},
+                                        child: Text(
+                                          'Edit',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      OutlinedButton(
+                                        onPressed: () {},
+                                        child: Text(
+                                          'Grade',
+                                          style: TextStyle(color: Colors.black),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10),
+                                      ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.black,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadiusGeometry.circular(
+                                                  10,
+                                                ),
+                                          ),
+                                        ),
+                                        onPressed: () {
+                                          Get.to(
+                                            SummativeAssignmentPage(
+                                              summative: e,
+                                              course: course,
+                                            ),
+                                          );
+                                        },
+                                        child: Text(
+                                          'Assign',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                      .toList(),
+                ),
+              );
+            }),
           ],
         ),
       ),

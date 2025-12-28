@@ -1,12 +1,13 @@
 import 'package:dpng_staff/features/assess_formative/view/assess_formative_page.dart';
 import 'package:dpng_staff/features/assess_summative/view/assess_summative_page.dart';
-import 'package:dpng_staff/features/assessment_center/models/assessment.dart';
+import 'package:dpng_staff/features/assessment_center/models/summative_assessment.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/instance_manager.dart';
+import 'package:intl/intl.dart';
 
 class AssessmentItemWidget extends StatelessWidget {
-  final Assessment item;
+  final SummativeAssessment item;
   const AssessmentItemWidget({
     super.key,
     required this.item,
@@ -28,6 +29,7 @@ class AssessmentItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final DateFormat df = DateFormat('yyyy-MM-dd');
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
@@ -52,10 +54,10 @@ class AssessmentItemWidget extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    smallChip(item.author),
-                    smallChip(item.course),
-                    smallChip(item.track),
-                    smallChip(item.date),
+                    // smallChip(item.author),
+                    smallChip(item.title1),
+                    smallChip(item.course_type == 4 ? 'Track A' : 'Track B'),
+                    smallChip(df.format(item.date)),
                     const Spacer(),
                   ],
                 ),
@@ -66,9 +68,7 @@ class AssessmentItemWidget extends StatelessWidget {
           // Action
           ElevatedButton(
             onPressed: () {
-              index == 0
-                  ? Get.to(AssessSummativePage())
-                  : Get.to(AssessFormativePage());
+              Get.to(AssessSummativePage(summativeAssessment: item));
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF081328),

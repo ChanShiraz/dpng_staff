@@ -38,7 +38,7 @@ class _HomePageState extends State<HomePage> {
     ever(userController.isLoading, (loading) {
       if (loading == false && userController.currentUser.value != null) {
         //final ly = userController.learningYear.value;
-        coursesController.loadCourses(coursesController.courseType.value);
+        coursesController.fetchCourses(coursesController.courseType.value);
         summativeController.calWeekProgress();
         formativeController.calWeekProgress();
         //coursesController.loadSummativeBubbles();
@@ -66,136 +66,227 @@ class _HomePageState extends State<HomePage> {
                     horizontal: 20,
                     vertical: 18,
                   ),
-                  child: Obx(
-                    () => userController.isLoading.value
+                  child: Obx(() {
+                    return userController.isLoading.value
                         ? SpinKitFadingCircle(color: AppColors.blueLight)
-                        : SingleChildScrollView(
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                minHeight: MediaQuery.of(context).size.height,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                children: [
-                                  // Top controls: track toggle + menu icon
-                                  Row(
-                                    children: [
-                                      const SizedBox(width: 6),
-                                      TrackToggle(
-                                        selectedTrack:
-                                            coursesController
-                                                    .courseType
-                                                    .value ==
-                                                4
-                                            ? 'A'
-                                            : 'B',
-                                        onChanged: (String value) {
-                                          if (value.contains('A')) {
-                                            coursesController.courseType.value =
-                                                4;
-                                          } else {
-                                            coursesController.courseType.value =
-                                                5;
-                                          }
-                                          coursesController.loadCourses(
-                                            coursesController.courseType.value,
-                                          );
-                                        },
-                                        //coursesController: coursesController,
-                                      ),
-                                    ],
-                                  ),
+                        : RefreshIndicator(
+                            onRefresh: () {
+                              summativeController.calWeekProgress();
+                              formativeController.calWeekProgress();
+                              return coursesController.fetchCourses(
+                                coursesController.courseType.value,
+                              );
+                            },
+                            child: SingleChildScrollView(
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minHeight: MediaQuery.of(context).size.height,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            const SizedBox(width: 6),
+                                            TrackToggle(
+                                              selectedTrack:
+                                                  coursesController
+                                                          .courseType
+                                                          .value ==
+                                                      4
+                                                  ? 'A'
+                                                  : 'B',
+                                              onChanged: (String value) {
+                                                if (value.contains('A')) {
+                                                  coursesController
+                                                          .courseType
+                                                          .value =
+                                                      4;
+                                                } else {
+                                                  coursesController
+                                                          .courseType
+                                                          .value =
+                                                      5;
+                                                }
+                                                coursesController.fetchCourses(
+                                                  coursesController
+                                                      .courseType
+                                                      .value,
+                                                );
+                                              },
+                                              //coursesController: coursesController,
+                                            ),
+                                          ],
+                                        ),
+                                        // ElevatedButton.icon(
+                                        //   icon: Icon(Icons.refresh),
+                                        //   style: ElevatedButton.styleFrom(
+                                        //     backgroundColor: Colors.blue.shade600,
+                                        //     shape: RoundedRectangleBorder(
+                                        //       borderRadius: BorderRadius.circular(
+                                        //         30,
+                                        //       ),
+                                        //     ),
+                                        //   ),
+                                        //   onPressed: () {},
+                                        //   label: Text('Refresh'),
+                                        // ),
+                                      ],
+                                    ),
 
-                                  const SizedBox(height: 18),
-                                  // Courses carousel
-                                  Obx(
-                                    () => coursesController.loadingCourses.value
-                                        ? CourseCarouselShimmer()
-                                        : CourseCarousel(
-                                            courses: coursesController.courses,
+                                    const SizedBox(height: 18),
+                                    Obx(() {
+                                      if (coursesController
+                                          .fetchingCourses
+                                          .value) {
+                                        return CourseCarouselShimmer();
+                                      }
+                                      if (coursesController
+                                          .fetchingCoursesError
+                                          .value
+                                          .isNotEmpty) {
+                                        return Center(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              IconButton(
+                                                onPressed: () {
+                                                  coursesController
+                                                      .fetchCourses(
+                                                        coursesController
+                                                            .courseType
+                                                            .value,
+                                                      );
+                                                },
+                                                icon: Icon(
+                                                  Icons.refresh,
+                                                  size: 32,
+                                                  color: AppColors.blueLight,
+                                                ),
+                                              ),
+                                              Text(
+                                                coursesController
+                                                    .fetchingCoursesError
+                                                    .value,
+                                                style: const TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                  ),
-                                  const SizedBox(height: 18),
-                                  // Content grid
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      // Left column (big) - assessments stacked
-                                      Expanded(
-                                        flex: 2,
-                                        child: Column(
-                                          children: [
-                                            Obx(
-                                              () =>
-                                                  summativeController
-                                                      .isLoading
-                                                      .value
-                                                  ? AssessmentCardShimmer()
-                                                  : AssessmentCard(
-                                                      title:
-                                                          'Weekly Summative Assessment Overview',
-                                                      toGrade:
-                                                          summativeController
-                                                              .y -
-                                                          summativeController.x,
-                                                      submissions:
-                                                          summativeController.x,
-                                                      total:
-                                                          summativeController.y,
-                                                    ),
+                                        );
+                                      }
+                                      if (coursesController.courses.isEmpty) {
+                                        return const Center(
+                                          child: Text(
+                                            'No courses assigned yet.',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.grey,
                                             ),
-                                            const SizedBox(height: 18),
-                                            Obx(
-                                              () =>
-                                                  formativeController
-                                                      .isLoading
-                                                      .value
-                                                  ? AssessmentCardShimmer()
-                                                  : AssessmentCard(
-                                                      title:
-                                                          'Weekly Formative Assessment Overview',
-                                                      toGrade:
-                                                          formativeController
-                                                              .y -
-                                                          formativeController.x,
-                                                      submissions:
-                                                          formativeController.x,
-                                                      total:
-                                                          formativeController.y,
-                                                    ),
-                                            ),
-                                            const SizedBox(height: 18),
-                                          ],
+                                          ),
+                                        );
+                                      }
+                                      return CourseCarousel(
+                                        courses: coursesController.courses,
+                                      );
+                                    }),
+                                    const SizedBox(height: 18),
+                                    // Content grid
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // Left column (big) - assessments stacked
+                                        Expanded(
+                                          flex: 2,
+                                          child: Column(
+                                            children: [
+                                              Obx(
+                                                () =>
+                                                    summativeController
+                                                        .isLoading
+                                                        .value
+                                                    ? AssessmentCardShimmer()
+                                                    : AssessmentCard(
+                                                        title:
+                                                            'Weekly Summative Assessment Overview',
+                                                        toGrade:
+                                                            summativeController
+                                                                .y -
+                                                            summativeController
+                                                                .x,
+                                                        submissions:
+                                                            summativeController
+                                                                .x,
+                                                        total:
+                                                            summativeController
+                                                                .y,
+                                                      ),
+                                              ),
+                                              const SizedBox(height: 18),
+                                              Obx(
+                                                () =>
+                                                    formativeController
+                                                        .isLoading
+                                                        .value
+                                                    ? AssessmentCardShimmer()
+                                                    : AssessmentCard(
+                                                        formatives: true,
+                                                        title:
+                                                            'Weekly Formative Assessment Overview',
+                                                        toGrade:
+                                                            formativeController
+                                                                .y -
+                                                            formativeController
+                                                                .x,
+                                                        submissions:
+                                                            formativeController
+                                                                .x,
+                                                        total:
+                                                            formativeController
+                                                                .y,
+                                                      ),
+                                              ),
+                                              const SizedBox(height: 18),
+                                            ],
+                                          ),
                                         ),
-                                      ),
 
-                                      const SizedBox(width: 18),
-                                      SizedBox(
-                                        width: isWide ? 360 : 320,
-                                        child: Column(
-                                          children: [
-                                            SizedBox(
-                                              height: 8,
-                                              child: Container(),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            const SizedBox(
-                                              height: 320,
-                                              child: CalendarWidget(),
-                                            ),
-                                            const SizedBox(height: 18),
-                                            // MessagesWidget(messages: sampleMessages),
-                                          ],
+                                        const SizedBox(width: 18),
+                                        SizedBox(
+                                          width: isWide ? 360 : 320,
+                                          child: Column(
+                                            children: [
+                                              SizedBox(
+                                                height: 8,
+                                                child: Container(),
+                                              ),
+                                              const SizedBox(height: 8),
+                                              const SizedBox(
+                                                height: 320,
+                                                child: CalendarWidget(),
+                                              ),
+                                              const SizedBox(height: 18),
+                                              // MessagesWidget(messages: sampleMessages),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                  ),
+                          );
+                  }),
                 ),
               ),
             ],

@@ -1,7 +1,9 @@
+import 'package:dpng_staff/common/top_bar.dart';
 import 'package:dpng_staff/features/assessment_center/controller/assessment_center_controller.dart';
-import 'package:dpng_staff/features/assessment_center/models/assessment.dart';
+import 'package:dpng_staff/features/assessment_center/models/summative_assessment.dart';
 import 'package:dpng_staff/features/assessment_center/widgets/pending_formative_list.dart';
 import 'package:dpng_staff/features/assessment_center/widgets/pending_summative_list.dart';
+import 'package:dpng_staff/features/assessment_center/widgets/pending_toggle.dart';
 import 'package:dpng_staff/features/assessment_center/widgets/quick_filters.dart';
 import 'package:dpng_staff/features/assessment_center/widgets/sidebar_panels.dart';
 import 'package:dpng_staff/features/assessment_center/widgets/stats_header.dart';
@@ -9,9 +11,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
-class AssessmentCenterPage extends StatelessWidget {
-  AssessmentCenterPage({super.key});
+class AssessmentCenterPage extends StatefulWidget {
+  const AssessmentCenterPage({super.key, this.formatives});
+  final bool? formatives;
+
+  @override
+  State<AssessmentCenterPage> createState() => _AssessmentCenterPageState();
+}
+
+class _AssessmentCenterPageState extends State<AssessmentCenterPage> {
   final controller = Get.put(AssessmentCenterController());
+  @override
+  void initState() {
+    //controller.fetchSummativeAssessments();
+    if (widget.formatives != null) {
+      controller.selected.value = 'Formatives';
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +39,10 @@ class AssessmentCenterPage extends StatelessWidget {
         final isMedium = width >= 800 && width < 1100;
 
         return Scaffold(
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(60),
+            child: TopBar(title: 'Assessment Center', centerTitle: true),
+          ),
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
@@ -34,23 +55,24 @@ class AssessmentCenterPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            IconButton(
-                              onPressed: () => Get.back(),
-                              icon: Icon(Icons.arrow_back_ios_new_rounded),
-                            ),
-                            const Text(
-                              'Assessment Center',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 18),
-                        const StatsHeader(),
+                        // Row(
+                        //   children: [
+                        //     IconButton(
+                        //       onPressed: () => Get.back(),
+                        //       icon: Icon(Icons.arrow_back_ios_new_rounded),
+                        //     ),
+                        //     const Text(
+                        //       'Assessment Center',
+                        //       style: TextStyle(
+                        //         fontSize: 20,
+                        //         fontWeight: FontWeight.w700,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+
+                        // const SizedBox(height: 18),
+                        // const StatsHeader(),
                         const SizedBox(height: 18),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,48 +94,56 @@ class AssessmentCenterPage extends StatelessWidget {
                                           ),
                                         ),
                                         child: Obx(
-                                          () => ToggleButtons(
-                                            borderWidth: 0,
-                                            isSelected: [
-                                              controller
-                                                      .selectedToggleIndex
-                                                      .value ==
-                                                  0,
-                                              controller
-                                                      .selectedToggleIndex
-                                                      .value ==
-                                                  1,
-                                            ],
-                                            onPressed: (i) {
-                                              controller.onTogglePressed(i);
-                                            },
-                                            borderRadius: BorderRadius.circular(
-                                              20,
-                                            ),
-                                            selectedColor: Colors.black,
-                                            fillColor: Colors.white,
-
-                                            children: const [
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 14,
-                                                  vertical: 8,
-                                                ),
-                                                child: Text(
-                                                  'Pending Summatives',
-                                                ),
+                                          () =>
+                                              // ToggleButtons(
+                                              //   borderWidth: 0,
+                                              //   isSelected: [
+                                              //     controller
+                                              //             .selectedToggleIndex
+                                              //             .value ==
+                                              //         0,
+                                              //     controller
+                                              //             .selectedToggleIndex
+                                              //             .value ==
+                                              //         1,
+                                              //   ],
+                                              //   onPressed: (i) {
+                                              //     controller.onTogglePressed(i);
+                                              //   },
+                                              //   borderRadius: BorderRadius.circular(
+                                              //     20,
+                                              //   ),
+                                              //   selectedColor: Colors.black,
+                                              //   fillColor: Colors.white,
+                                              //   children: const [
+                                              //     Padding(
+                                              //       padding: EdgeInsets.symmetric(
+                                              //         horizontal: 14,
+                                              //         vertical: 8,
+                                              //       ),
+                                              //       child: Text(
+                                              //         'Pending Summatives',
+                                              //       ),
+                                              //     ),
+                                              //     Padding(
+                                              //       padding: EdgeInsets.symmetric(
+                                              //         horizontal: 14,
+                                              //         vertical: 8,
+                                              //       ),
+                                              //       child: Text(
+                                              //         'Pending Formatives',
+                                              //       ),
+                                              //     ),
+                                              //   ],
+                                              // ),
+                                              PendingToggle(
+                                                selectedTrack:
+                                                    controller.selected.value,
+                                                onChanged: (value) {
+                                                  controller.selected.value =
+                                                      value;
+                                                },
                                               ),
-                                              Padding(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 14,
-                                                  vertical: 8,
-                                                ),
-                                                child: Text(
-                                                  'Pending Formatives',
-                                                ),
-                                              ),
-                                            ],
-                                          ),
                                         ),
                                       ),
                                       const Spacer(),
@@ -153,14 +183,11 @@ class AssessmentCenterPage extends StatelessWidget {
                                   const SizedBox(height: 12),
                                   Obx(
                                     () =>
-                                        controller.selectedToggleIndex.value ==
-                                            0
-                                        ? PendingSummativeList(
-                                            items: samplePending,
-                                          )
-                                        : PendingFormativeList(
-                                            items: samplePending,
-                                          ),
+                                        controller.selected.value.contains(
+                                          'Summatives',
+                                        )
+                                        ? PendingSummativeList()
+                                        : PendingFormativeList(),
                                   ),
                                 ],
                               ),

@@ -8,12 +8,14 @@ class AssessmentCard extends StatelessWidget {
   final int toGrade;
   final int submissions;
   final int total;
+  final bool? formatives;
   const AssessmentCard({
     super.key,
     required this.title,
     required this.toGrade,
     required this.submissions,
     required this.total,
+    this.formatives,
   });
 
   @override
@@ -23,7 +25,7 @@ class AssessmentCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 2,
       child: InkWell(
-        onTap: () => Get.to(AssessmentCenterPage()),
+        onTap: () => Get.to(AssessmentCenterPage(formatives: formatives)),
         child: Padding(
           padding: const EdgeInsets.all(18),
           child: Column(

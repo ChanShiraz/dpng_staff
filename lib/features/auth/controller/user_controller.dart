@@ -17,12 +17,12 @@ class UserController extends GetxController {
     loadUser();
   }
 
-  void loadUser() {
+  void loadUser() async {
     try {
       final data = box.read('user');
       currentUser.value = data != null ? UserModel.fromJson(data) : null;
       if (currentUser.value != null) {
-        loadCurrentLY(currentUser.value!.schoolId!);
+        await loadCurrentLY(currentUser.value!.schoolId!);
       }
     } catch (e) {
       print('Error $e');
@@ -40,6 +40,7 @@ class UserController extends GetxController {
           .single();
       final result = await query;
       learningYear.value = result['alyid'];
+      print('Current LY: ${learningYear.value}');
     } catch (e) {
       print('error $e');
     }
