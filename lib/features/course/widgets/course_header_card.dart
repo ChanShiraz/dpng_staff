@@ -1,14 +1,18 @@
+import 'package:dpng_staff/features/course/controller/course_overview_controller.dart';
 import 'package:dpng_staff/features/home/models/course_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 
 class CourseHeaderCard extends StatelessWidget {
   const CourseHeaderCard({
     super.key,
     required this.course,
     required this.color,
+    required this.controller,
   });
   final CourseModel course;
   final Color color;
+  final CourseOverviewController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -48,10 +52,17 @@ class CourseHeaderCard extends StatelessWidget {
 
             const SizedBox(height: 16),
             Row(
-              children: const [
+              children: [
                 Icon(Icons.people_alt_outlined, size: 18, color: Colors.white),
                 SizedBox(width: 6),
-                Text('34 students', style: TextStyle(color: Colors.white)),
+                Obx(
+                  () => controller.fetchingStudents.value
+                      ? SizedBox()
+                      : Text(
+                          '${controller.totalStudents.value} students',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                ),
               ],
             ),
           ],

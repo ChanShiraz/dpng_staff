@@ -1,11 +1,14 @@
 import 'package:dpng_staff/features/course/model/summative.dart';
+import 'package:dpng_staff/features/summative_assignment/controller/summative_assingnment_controller.dart';
 import 'package:dpng_staff/features/summative_assignment/widgets/lessons_section.dart';
 import 'package:dpng_staff/features/summative_assignment/widgets/students_section.dart';
 import 'package:dpng_staff/features/summative_assignment/widgets/summative_section.dart';
 import 'package:flutter/material.dart';
+import 'package:get/instance_manager.dart';
 
 class AssignDueDatesCard extends StatelessWidget {
-  const AssignDueDatesCard({super.key, required this.summative});
+   AssignDueDatesCard({super.key, required this.summative});
+  final controller = Get.find<SummativeAssingnmentController>();
   final Summative summative;
 
   @override
@@ -63,6 +66,7 @@ class AssignDueDatesCard extends StatelessWidget {
             ),
             StudentsSection(),
             SizedBox(height: 20),
+
           ],
         ),
       ),

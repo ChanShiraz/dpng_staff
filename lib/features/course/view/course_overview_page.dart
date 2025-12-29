@@ -14,19 +14,21 @@ import 'package:flutter/material.dart';
 import 'package:get/instance_manager.dart';
 
 class CourseOverviewPage extends StatefulWidget {
-  CourseOverviewPage({super.key, required this.course});
+  const CourseOverviewPage({super.key, required this.course});
   final CourseModel course;
-  late CourseOverviewController controller;
 
   @override
   State<CourseOverviewPage> createState() => _CourseOverviewPageState();
 }
 
 class _CourseOverviewPageState extends State<CourseOverviewPage> {
+  late CourseOverviewController controller;
   @override
   void initState() {
-    widget.controller = Get.put(CourseOverviewController());
-    widget.controller.fetchSummatives(widget.course.a_cid);
+    controller = Get.put(CourseOverviewController());
+    controller.fetchSummatives(widget.course.a_cid);
+    controller.fetchGradingOverview(widget.course.a_cid);
+
     super.initState();
   }
 
@@ -63,13 +65,14 @@ class _CourseOverviewPageState extends State<CourseOverviewPage> {
                                       CourseHeaderCard(
                                         course: widget.course,
                                         color: hexToColor(widget.course.color),
+                                        controller: controller,
                                       ),
                                       SizedBox(height: 16),
                                       CourseTabs(courseId: widget.course.a_cid),
                                       SizedBox(height: 16),
                                       CourseSummativeTable(
                                         course: widget.course,
-                                        controller: widget.controller,
+                                        controller: controller,
                                       ),
                                     ],
                                   ),
@@ -79,12 +82,15 @@ class _CourseOverviewPageState extends State<CourseOverviewPage> {
                                 SizedBox(
                                   width: 320,
                                   child: Column(
-                                    children: const [
-                                      GradingOverviewCard(),
+                                    children: [
+                                      GradingOverviewCard(
+                                        acid: widget.course.a_cid,
+                                        controller: controller,
+                                      ),
                                       SizedBox(height: 16),
                                       CalendarCard(),
                                       SizedBox(height: 16),
-                                      MessagesCard(),
+                                      // MessagesCard(),
                                     ],
                                   ),
                                 ),
@@ -100,20 +106,24 @@ class _CourseOverviewPageState extends State<CourseOverviewPage> {
                       CourseHeaderCard(
                         course: widget.course,
                         color: hexToColor(widget.course.color),
+                        controller: controller,
                       ),
                       SizedBox(height: 16),
-                      GradingOverviewCard(),
+                      GradingOverviewCard(
+                        acid: widget.course.a_cid,
+                        controller: controller,
+                      ),
                       SizedBox(height: 16),
                       CourseTabs(courseId: widget.course.a_cid),
                       SizedBox(height: 16),
                       CourseSummativeTable(
-                        controller: widget.controller,
+                        controller: controller,
                         course: widget.course,
                       ),
                       SizedBox(height: 16),
                       CalendarCard(),
                       SizedBox(height: 16),
-                      MessagesCard(),
+                      //MessagesCard(),
                     ],
                   ),
           );

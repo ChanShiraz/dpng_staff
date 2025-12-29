@@ -7,6 +7,7 @@ import 'package:dpng_staff/features/lesson_builder/widgets/formative_assessment_
 import 'package:dpng_staff/features/lesson_builder/widgets/lesson_information_section.dart';
 import 'package:dpng_staff/features/lesson_builder/widgets/materiels_section.dart';
 import 'package:dpng_staff/features/lesson_builder/widgets/stadards_section.dart';
+import 'package:dpng_staff/features/rubric_creation/steps/step5_rubric_levels.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -64,28 +65,31 @@ class _LessonBuilderPageState extends State<LessonBuilderPage> {
                     ),
                   ),
                   SizedBox(width: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (informationFormKey.currentState!.validate()) {
-                        final lesson = LessonModel(
-                          modnum: 1,
-                          dmod_sum_id: widget.summative.dmod_sum_id,
-                          altid: 1,
-                          a_cid: widget.summative.aCid,
-                          number: controller.selectedNumber,
-                          title: controller.titleController.text,
-                          description: controller.descriptionController.text,
-                          active: 1,
-                          summative_status: 1,
-                        );
-                        controller.insertLesson(lesson);
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                    ),
-                    child: Obx(
-                      () => controller.insertingLesson.value
+                  Obx(
+                    () => ElevatedButton(
+                      onPressed: controller.lessonInserted.value
+                          ? null
+                          : () {
+                              if (informationFormKey.currentState!.validate()) {
+                                final lesson = LessonModel(
+                                  modnum: 1,
+                                  dmod_sum_id: widget.summative.dmod_sum_id,
+                                  altid: 1,
+                                  a_cid: widget.summative.aCid,
+                                  number: controller.selectedNumber,
+                                  title: controller.titleController.text,
+                                  description:
+                                      controller.descriptionController.text,
+                                  active: 1,
+                                  summative_status: 1,
+                                );
+                                controller.insertLesson(lesson);
+                              }
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                      child: controller.insertingLesson.value
                           ? Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 30,
@@ -140,6 +144,51 @@ class _LessonBuilderPageState extends State<LessonBuilderPage> {
                       ),
                       SizedBox(height: 20),
                       FormativeAssessmentSection(),
+                      SizedBox(height: 20),
+                      Obx(() {
+                        if (controller.errorMessage.isEmpty) return SizedBox();
+                        return RoundContainer(
+                          child: Row(
+                            children: [
+                              Icon(Icons.error_outline, color: Colors.red),
+                              SizedBox(width: 10),
+                              Text(
+                                controller.errorMessage.value,
+                                style: TextStyle(fontSize: 13),
+                              ),
+                            ],
+                          ),
+                        );
+                      }),
+                      SizedBox(height: 10),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                          ),
+                          onPressed: () {
+                            controller.saveLesson();
+                          },
+                          child: Obx(
+                            () => controller.savingLesson.value
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 98,
+                                    ),
+                                    child: SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 3,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  )
+                                : Text('Save Lesson Material and Finish'),
+                          ),
+                        ),
+                      ),
                       SizedBox(height: 20),
                     ],
                   ),

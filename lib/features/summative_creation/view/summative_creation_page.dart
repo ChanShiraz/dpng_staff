@@ -10,7 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SummativeCreationSingleView extends StatefulWidget {
-  const SummativeCreationSingleView({super.key});
+  const SummativeCreationSingleView({super.key, this.fromLibrary});
+  final bool? fromLibrary;
 
   @override
   State<SummativeCreationSingleView> createState() =>
@@ -66,6 +67,7 @@ class _SummativeCreationSingleViewState
                         const SizedBox(height: 16),
 
                         Step3Details(
+                          fromLibrary: widget.fromLibrary,
                           openStep: controller.openStep.value,
                           selectedRubric: controller.selectedRubric.value,
                           step2Complete: controller.step2Complete.value,

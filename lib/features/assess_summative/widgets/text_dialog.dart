@@ -11,7 +11,7 @@ class TextDialog extends StatelessWidget {
   final QuillController quillController;
 
   TextDialog({super.key, String? initialText})
-    : quillController = _buildController(initialText);
+    : quillController = buildController(initialText);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class TextDialog extends StatelessWidget {
   }
 }
 
-QuillController _buildController(String? jsonText) {
+QuillController buildController(String? jsonText) {
   if (jsonText == null || jsonText.isEmpty) {
     return QuillController.basic();
   }

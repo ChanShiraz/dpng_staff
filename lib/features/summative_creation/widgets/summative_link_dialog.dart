@@ -137,6 +137,7 @@ class SummativeLinkDialog extends StatelessWidget {
                             }
                             Navigator.of(context).pop();
                             Get.delete<LinkController>();
+                            
                           }
                         },
                         style: ElevatedButton.styleFrom(

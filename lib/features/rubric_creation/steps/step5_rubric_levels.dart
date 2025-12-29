@@ -1,3 +1,4 @@
+import 'package:dpng_staff/features/%20district_rubric_library/pages/district_rubric_library_page.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/summative_card.dart';
 import 'package:dpng_staff/features/rubric_creation/controller/rubric_controller.dart';
 import 'package:dpng_staff/features/rubric_creation/widgets/aligned_competencies_card.dart';
@@ -76,6 +77,7 @@ class Step5RubricLevels extends GetView<RubricController> {
                                 'Success! Rubric Submitted',
                               );
                               Get.back();
+                              Get.to(DistrictRubricLibraryPage());
                             }
                           : null,
                       child: Obx(
@@ -114,6 +116,7 @@ class Step5RubricLevels extends GetView<RubricController> {
                                 'Success! Rubric Submitted',
                               );
                               Get.back();
+                              Get.to(DistrictRubricLibraryPage());
                             }
                           : null,
                       child: Obx(

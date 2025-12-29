@@ -3,11 +3,14 @@ import 'package:dpng_staff/features/rubric_creation/steps/step5_rubric_levels.da
 import 'package:dpng_staff/features/summative_creation/controller/rubric_level_controller.dart';
 import 'package:dpng_staff/features/summative_creation/controller/summative_creation_controller.dart';
 import 'package:dpng_staff/features/summative_creation/models/rubric.dart';
+import 'package:dpng_staff/features/summative_creation/widgets/competency_standards_section.dart';
 import 'package:dpng_staff/features/summative_creation/widgets/instructional_material_dialog.dart';
 import 'package:dpng_staff/features/summative_creation/widgets/resource_section.dart';
+import 'package:dpng_staff/features/summative_creation/widgets/rubric_example_section.dart';
 import 'package:dpng_staff/features/summative_creation/widgets/rubric_level_chip.dart';
 import 'package:dpng_staff/features/summative_creation/widgets/summative_link_dialog.dart';
 import 'package:dpng_staff/features/summative_creation/widgets/summative_text_dialog.dart';
+import 'package:dpng_staff/features/summative_library/pages/summative_library_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/instance_manager.dart';
@@ -15,6 +18,7 @@ import 'package:get/route_manager.dart';
 import 'section_card.dart';
 
 class Step3Details extends StatelessWidget {
+  final bool? fromLibrary;
   final int? openStep;
   final SummativeRubric? selectedRubric;
   final bool step2Complete;
@@ -30,6 +34,7 @@ class Step3Details extends StatelessWidget {
     required this.step2Complete,
     required this.step3Ready,
     required this.levelColors,
+    this.fromLibrary
   });
 
   @override
@@ -103,11 +108,27 @@ class Step3Details extends StatelessWidget {
           const SizedBox(height: 16),
           RubricLevelChip(),
           const SizedBox(height: 16),
-          // _rubricInfo(),
+          Row(
+            children: [
+              Obx(
+                () => controller.selectedRubric.value != null
+                    ? Expanded(
+                        flex: 1,
+                        child: CompetencyStandardsSection(
+                          selectedRubric: controller.selectedRubric.value!,
+                        ),
+                      )
+                    : SizedBox(),
+              ),
+              SizedBox(width: 15),
+              Expanded(flex: 1, child: RubricExampleSection()),
+            ],
+          ),
           const SizedBox(height: 16),
+          // _rubricInfo(),
           ScafolddingEntry(),
           const SizedBox(height: 16),
-          _footerButtons(context),
+          _footerButtons(context,fromLibrary),
         ],
       ),
     );
@@ -241,7 +262,7 @@ class Step3Details extends StatelessWidget {
   //   );
   // }
 
-  Widget _footerButtons(BuildContext context) {
+  Widget _footerButtons(BuildContext context,bool? fromLibrary) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -271,7 +292,7 @@ class Step3Details extends StatelessWidget {
                   ? controller.insertingSummative.value
                         ? null
                         : () async {
-                            await controller.insertSummative();
+                            await controller.insertSummative(fromLibrary);
                             Get.delete<RubricLevelController>();
                             showDesktopToast(context, 'Summmative added!');
                           }

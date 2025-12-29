@@ -1,3 +1,4 @@
+import 'package:dpng_staff/features/district_summative_library/widgets/summative_card.dart';
 import 'package:dpng_staff/features/lesson_builder/cotroller/lesson_builder_repo.dart';
 import 'package:dpng_staff/features/lesson_builder/models/ecbi.dart';
 import 'package:dpng_staff/features/lesson_builder/models/lesson_material.dart';
@@ -7,6 +8,7 @@ import 'package:dpng_staff/features/lesson_builder/models/lesson_tool_model.dart
 import 'package:dpng_staff/features/lesson_builder/models/tool.dart';
 import 'package:dpng_staff/features/summative_assignment/models/lesson.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
 
 class LessonBuilderController extends GetxController {
@@ -69,7 +71,8 @@ class LessonBuilderController extends GetxController {
 
   RxBool insertingTools = false.obs;
   RxBool lessonToolsInserted = false.obs;
-  void insertLessonTool() async {
+
+  Future<void> insertLessonTool() async {
     insertingTools.value = true;
     lessonToolsInserted.value = false;
     try {
@@ -92,7 +95,7 @@ class LessonBuilderController extends GetxController {
   RxBool insertingLessonMaterial = false.obs;
   RxBool lessonMaterialInserted = false.obs;
 
-  void insertLessonMaterial() async {
+  Future<void> insertLessonMaterial() async {
     insertingLessonMaterial.value = true;
     lessonMaterialInserted.value = false;
     try {
@@ -114,7 +117,7 @@ class LessonBuilderController extends GetxController {
 
   RxBool insertingKnowledge = false.obs;
   RxBool knowledgeInserted = false.obs;
-  void insertKnowledge() async {
+  Future<void> insertKnowledge() async {
     insertingKnowledge.value = true;
     knowledgeInserted.value = false;
     try {
@@ -136,7 +139,7 @@ class LessonBuilderController extends GetxController {
 
   RxBool insertingDifferential = false.obs;
   RxBool differentialInserted = false.obs;
-  void insertDifferential() async {
+  Future<void> insertDifferential() async {
     insertingDifferential.value = true;
     differentialInserted.value = false;
     try {
@@ -158,7 +161,7 @@ class LessonBuilderController extends GetxController {
 
   RxBool insertingFormative = false.obs;
   RxBool formativeInserted = false.obs;
-  void insertFormative() async {
+  Future<void> insertFormative() async {
     insertingFormative.value = true;
     formativeInserted.value = false;
     try {
@@ -238,5 +241,56 @@ class LessonBuilderController extends GetxController {
       }
     }
     insertingEcbi.value = false;
+  }
+
+  final errorMessage = ''.obs;
+  RxBool savingLesson = false.obs;
+  void saveLesson() async {
+    if (!validateLessonData()) {
+      return;
+    }
+    savingLesson.value = true;
+    errorMessage.value = '';
+    try {
+      if (validateLessonData()) {
+        await insertLessonTool();
+        await insertLessonMaterial();
+        await insertKnowledge();
+        await insertDifferential();
+        await insertFormative();
+      }
+      Get.back();
+      showDesktopToast2('Lesson Saved Successfully');
+    } catch (e) {
+      errorMessage.value = 'Some error occured, Please try again!';
+      debugPrint('error saving lesson $e');
+    }
+    savingLesson.value = false;
+  }
+
+  bool validateLessonData() {
+    if (lessonTools.isEmpty) {
+      errorMessage.value = 'At least one Lesson Tool is required';
+      return false;
+    }
+    if (lessonMaterials.isEmpty) {
+      errorMessage.value = 'At least one Lesson Material is required';
+      return false;
+    }
+    if (knowledges.isEmpty) {
+      errorMessage.value = 'At least one Prior Knowledge item is required';
+      return false;
+    }
+    if (differentials.isEmpty) {
+      errorMessage.value = 'At least one Differential item is required';
+      return false;
+    }
+    if (formatives.isEmpty) {
+      errorMessage.value = 'At least one Formative is required';
+      return false;
+    }
+
+    errorMessage.value = '';
+    return true;
   }
 }

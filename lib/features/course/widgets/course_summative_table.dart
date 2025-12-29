@@ -74,7 +74,7 @@ class CourseSummativeTable extends StatelessWidget {
                     DataColumn(label: Text('Pending')),
                     DataColumn(label: Text('Resubmits')),
                     DataColumn(label: Text('Past Due')),
-                    DataColumn(label: Text('Not Assigned')),
+                    //  DataColumn(label: Text('Not Assigned')),
                     DataColumn(label: Text('Tools')),
                   ],
                   rows: controller.summatives
@@ -85,7 +85,7 @@ class CourseSummativeTable extends StatelessWidget {
                             DataCell(
                               Center(
                                 child: Text(
-                                  '1',
+                                  e.statusCounts!.accepted.toString(),
                                   style: const TextStyle(color: Colors.green),
                                 ),
                               ),
@@ -93,7 +93,7 @@ class CourseSummativeTable extends StatelessWidget {
                             DataCell(
                               Center(
                                 child: Text(
-                                  '2',
+                                  e.statusCounts!.pending.toString(),
                                   style: const TextStyle(color: Colors.blue),
                                 ),
                               ),
@@ -101,7 +101,7 @@ class CourseSummativeTable extends StatelessWidget {
                             DataCell(
                               Center(
                                 child: Text(
-                                  '3',
+                                  e.statusCounts!.resubmit.toString(),
                                   style: TextStyle(color: Colors.orange),
                                 ),
                               ),
@@ -109,12 +109,12 @@ class CourseSummativeTable extends StatelessWidget {
                             DataCell(
                               Center(
                                 child: Text(
-                                  '4',
+                                  e.statusCounts!.pastDue.toString(),
                                   style: TextStyle(color: Colors.red),
                                 ),
                               ),
                             ),
-                            DataCell(Center(child: Text('5'))),
+                            //  DataCell(Center(child: Text('0'))),
                             DataCell(
                               Center(
                                 child: Center(

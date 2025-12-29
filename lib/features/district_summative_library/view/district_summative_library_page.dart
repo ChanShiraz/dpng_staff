@@ -7,6 +7,7 @@ import 'package:dpng_staff/features/district_summative_library/widgets/filter_dr
 import 'package:dpng_staff/features/district_summative_library/widgets/preview_panel.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/search_bar.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/summative_list.dart';
+import 'package:dpng_staff/features/summative_creation/view/summative_creation_page.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -54,7 +55,11 @@ class _DistrictSummativeLibraryPageState
                               borderRadius: BorderRadiusGeometry.circular(15),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Get.to(
+                              SummativeCreationSingleView(fromLibrary: true),
+                            );
+                          },
                           child: Text('Add Summative'),
                         ),
                         SizedBox(width: 10),
