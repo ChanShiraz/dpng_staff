@@ -16,27 +16,13 @@ class SummativeAssingnmentController extends GetxController {
   final int aCid;
   SummativeAssingnmentController({required this.summative, required this.aCid});
 
-  @override
-  void onInit() {
-    super.onInit();
-
-    // Recalculate whenever lessons change
-    ever<List<Lesson>>(lessons, (_) => _updateReadyStatus());
-
-    // Recalculate whenever selected students change
-    ever<List<Student>>(selectedStudents, (_) => _updateReadyStatus());
-
-    // Initial calculation
-    _updateReadyStatus();
-  }
-
-  void _updateReadyStatus() {
-    readyToAssign.value =
-        summative.dueDate != null &&
-        lessons.isNotEmpty &&
-        lessons.every((lesson) => lesson.dueDate != null) &&
-        selectedStudents.isNotEmpty;
-  }
+  // void _updateReadyStatus() {
+  //   readyToAssign.value =
+  //       summative.dueDate != null &&
+  //       lessons.isNotEmpty &&
+  //       lessons.every((lesson) => lesson.dueDate != null) &&
+  //       selectedStudents.isNotEmpty;
+  // }
 
   RxList<Lesson> lessons = <Lesson>[].obs;
   RxBool fetchingLessons = false.obs;
@@ -78,11 +64,16 @@ class SummativeAssingnmentController extends GetxController {
   RxBool readyToAssign = false.obs;
 
   RxBool assingingSummative = false.obs;
+  RxString assingSummativeError = ''.obs;
   Future<void> assignSummative(
     int aCid,
     int dmodSumId,
     BuildContext context,
   ) async {
+    if (!_validateAssignment()) {
+      return;
+    }
+    assingSummativeError.value = '';
     assingingSummative.value = true;
     try {
       final response = await supabase.rpc(
@@ -104,9 +95,44 @@ class SummativeAssingnmentController extends GetxController {
       showDesktopToast(context, 'Due dates assigned successfully');
       Get.back();
     } catch (e) {
-      showDesktopToast(context, 'Some error occured! Please try again.');
+      showDesktopToast(context, 'Some error occurred! Please try again.');
       debugPrint('error assigning summative $e');
+      if (e is PostgrestException) {
+        assingSummativeError.value = e.message;
+      } else {
+        assingSummativeError.value = 'Unexpected error occurred';
+      }
     }
+
     assingingSummative.value = false;
+  }
+
+  bool _validateAssignment() {
+    if (summative.dueDate == null) {
+      assingSummativeError.value = 'Summative due date is required';
+      return false;
+    }
+
+    if (lessons.isEmpty) {
+      assingSummativeError.value = 'No lessons found for this summative';
+      return false;
+    }
+
+    final lessonWithoutDate = lessons.firstWhereOrNull(
+      (l) => l.dueDate == null,
+    );
+
+    if (lessonWithoutDate != null) {
+      assingSummativeError.value = 'All lessons must have a due date assigned';
+      return false;
+    }
+
+    if (selectedStudents.isEmpty) {
+      assingSummativeError.value = 'Please select at least one student';
+      return false;
+    }
+
+    assingSummativeError.value = '';
+    return true;
   }
 }

@@ -22,10 +22,10 @@ class CalendarCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 6),
               child: Divider(),
             ),
-            Text(
-              'Upcoming: Quiz on Friday, 1:00–1:30 PM',
-              style: TextStyle(color: Colors.black54),
-            ),
+            // Text(
+            //   'Upcoming: Quiz on Friday, 1:00–1:30 PM',
+            //   style: TextStyle(color: Colors.black54),
+            // ),
           ],
         ),
       ),

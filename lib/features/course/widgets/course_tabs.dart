@@ -14,7 +14,7 @@ class CourseTabs extends StatefulWidget {
 
 class _CourseTabsState extends State<CourseTabs> {
   int selectedIndex = 0;
-  final tabs = ['Summatives', 'Formatives', 'Archive'];
+  final tabs = ['Summatives', 'Archive'];
 
   @override
   Widget build(BuildContext context) {

@@ -1,7 +1,16 @@
+import 'package:dpng_staff/features/course/controller/course_overview_controller.dart';
+import 'package:dpng_staff/features/course/widgets/summatives_shimmer.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class GradingOverviewCard extends StatelessWidget {
-  const GradingOverviewCard({super.key});
+  const GradingOverviewCard({
+    super.key,
+    required this.controller,
+    required this.acid,
+  });
+  final CourseOverviewController controller;
+  final int acid;
 
   @override
   Widget build(BuildContext context) {
@@ -22,19 +31,34 @@ class GradingOverviewCard extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 6),
               child: Divider(),
             ),
-            const Text('3 Summatives to grade'),
-            const SizedBox(height: 6),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: LinearProgressIndicator(
-                value: 0.7,
-                minHeight: 8,
-                backgroundColor: Colors.grey.shade200,
-                color: Colors.indigo,
-              ),
+            Obx(
+              () => controller.fetchingGradingOverview.value
+                  ? SummativesShimmer(quantity: 1, height: 50)
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${controller.y - controller.x} Summatives to grade',
+                        ),
+                        const SizedBox(height: 6),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: LinearProgressIndicator(
+                            value: controller.y == 0
+                                ? 0.0
+                                : (controller.x / controller.y).clamp(0.0, 1.0),
+                            minHeight: 8,
+                            backgroundColor: Colors.grey.shade200,
+                            color: Colors.indigo,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          '${controller.x} of ${controller.y} total submissions',
+                        ),
+                      ],
+                    ),
             ),
-            const SizedBox(height: 6),
-            const Text('7 of 10 total submissions'),
           ],
         ),
       ),

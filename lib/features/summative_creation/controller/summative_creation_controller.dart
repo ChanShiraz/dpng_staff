@@ -1,4 +1,5 @@
 import 'package:dpng_staff/features/auth/controller/user_controller.dart';
+import 'package:dpng_staff/features/district_summative_library/view/district_summative_library_page.dart';
 import 'package:dpng_staff/features/rubric_creation/models/competency.dart';
 import 'package:dpng_staff/features/rubric_creation/models/course_category.dart';
 import 'package:dpng_staff/features/summative_creation/controller/rubric_level_controller.dart';
@@ -108,7 +109,7 @@ class SummativeCreationController extends GetxController {
   }
 
   RxBool insertingSummative = false.obs;
-  Future<void> insertSummative() async {
+  Future<void> insertSummative(bool? fromLibrary) async {
     insertingSummative.value = true;
     try {
       SummativeInstModel instModel = SummativeInstModel(
@@ -131,7 +132,12 @@ class SummativeCreationController extends GetxController {
       );
       final dumsumId = await repo.insertSummative(instModel);
       await repo.insertResources(resourcecsAvailable, dumsumId);
-      Get.back();
+      if (fromLibrary != null) {
+        Get.back();
+      } else {
+        Get.back();
+        Get.to(DistrictSummativeLibraryPage());
+      }
       print('summative inserted with id $dumsumId');
     } catch (e) {
       print('error inserting summative $e');

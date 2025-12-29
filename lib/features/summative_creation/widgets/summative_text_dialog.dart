@@ -122,10 +122,18 @@ class SummativeTextDialog extends StatelessWidget {
                       SizedBox(width: 10),
                       ElevatedButton(
                         onPressed: () {
-                          summativeCreationController.addResource(
-                            controller.getLinkResource(),
-                          );
+                          if (editId != null) {
+                            summativeCreationController.updateResource(
+                              controller.getLinkResource(editingId: editId),
+                            );
+                          } else {
+                            summativeCreationController.addResource(
+                              controller.getLinkResource(),
+                            );
+                          }
+
                           Navigator.of(context).pop();
+                          controller.quillController.dispose();
                           Get.delete<TextController>();
                         },
                         style: ElevatedButton.styleFrom(

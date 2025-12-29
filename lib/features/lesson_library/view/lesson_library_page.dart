@@ -1,5 +1,5 @@
 import 'package:dpng_staff/common/top_bar.dart';
-import 'package:dpng_staff/features/archive_summative_library/controller/archive_summative_library_cotroller.dart';
+import 'package:dpng_staff/features/archive_summative_library/view/archive_summative_library_page.dart';
 import 'package:dpng_staff/features/district_summative_library/controller/dis_summative_lib_controller.dart';
 import 'package:dpng_staff/features/district_summative_library/models/summative_model.dart';
 import 'package:dpng_staff/features/district_summative_library/view/district_summative_library_page.dart';
@@ -8,26 +8,26 @@ import 'package:dpng_staff/features/district_summative_library/widgets/filter_dr
 import 'package:dpng_staff/features/district_summative_library/widgets/preview_panel.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/search_bar.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/summative_list.dart';
-import 'package:dpng_staff/features/summative_creation/view/summative_creation_page.dart';
+import 'package:dpng_staff/features/lesson_library/controller/lesson_library_controller.dart';
+import 'package:dpng_staff/features/lesson_library/widgets/lessons_list.dart';
+import 'package:dpng_staff/features/lesson_library/widgets/preview_panel.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/instance_manager.dart';
 
-class ArchiveSummativeLibraryPage extends StatefulWidget {
-  const ArchiveSummativeLibraryPage({super.key});
+class LessonLibraryPage extends StatefulWidget {
+  const LessonLibraryPage({super.key});
 
   @override
-  State<ArchiveSummativeLibraryPage> createState() =>
-      _ArchiveSummativeLibraryPageState();
+  State<LessonLibraryPage> createState() => _LessonLibraryPageState();
 }
 
-class _ArchiveSummativeLibraryPageState
-    extends State<ArchiveSummativeLibraryPage> {
-  final controller = Get.put(ArchiveSummativeLibraryCotroller());
+class _LessonLibraryPageState extends State<LessonLibraryPage> {
+  final controller = Get.put(LessonLibraryController());
   @override
   void initState() {
-    controller.fetchSummatives();
+    //  controller.fetchSummatives();
     super.initState();
   }
 
@@ -43,9 +43,9 @@ class _ArchiveSummativeLibraryPageState
               child: Column(
                 children: [
                   TopBar(
-                    title: 'Archived Summative Library',
+                    title: 'Lesson Library',
                     type: 2,
-                    subtitle: 'Browse, filter, and preview summatives…',
+                    subtitle: 'Browse, filter, and preview lessons...',
                     trailing: Row(
                       children: [
                         ElevatedButton(
@@ -56,12 +56,8 @@ class _ArchiveSummativeLibraryPageState
                               borderRadius: BorderRadiusGeometry.circular(15),
                             ),
                           ),
-                          onPressed: () {
-                            Get.to(
-                              SummativeCreationSingleView(fromLibrary: true),
-                            );
-                          },
-                          child: Text('Add Summative'),
+                          onPressed: () {},
+                          child: Text('Add Lesson'),
                         ),
                         SizedBox(width: 10),
                         ButtonShadow(
@@ -75,32 +71,16 @@ class _ArchiveSummativeLibraryPageState
                               ),
                             ),
                             onPressed: () {
-                              Get.back();
+                              Get.to(ArchiveSummativeLibraryPage());
                             },
                             child: Text(
-                              'Summative Library',
+                              'Archive',
                               style: TextStyle(color: Colors.black),
                             ),
                           ),
                         ),
                         SizedBox(width: 10),
-                        ButtonShadow(
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              elevation: 0,
-                              backgroundColor: Colors.white,
-                              minimumSize: Size(10, 45),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadiusGeometry.circular(15),
-                              ),
-                            ),
-                            onPressed: () {},
-                            child: Text(
-                              'Distric Summative',
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ),
-                        ),
+
                         SizedBox(width: 10),
                         ButtonShadow(
                           child: ElevatedButton(
@@ -138,7 +118,7 @@ class _ArchiveSummativeLibraryPageState
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.search, size: 20),
                                 hintText:
-                                    'Search by title, subject, or standard...',
+                                    'Search by title, subject, or summative...',
                                 filled: true,
                                 fillColor: Colors.white,
                                 border: OutlineInputBorder(
@@ -168,24 +148,23 @@ class _ArchiveSummativeLibraryPageState
                       children: [
                         Expanded(
                           flex: 2,
-                          child: SummativeList(
-                            arcive: true,
+                          child: LessonsList(
                             controller: controller,
                             // items: items,
                             onSelect: (s) {
                               // setState(() => selected = s);
-                              controller.selectSummative(s);
+                              controller.selectLesson(s);
                             },
-                            selected: controller.selectedSummative.value,
+                            selected: controller.selectedLesson.value,
+                            //controller.selectedSummative.value,
                           ),
                         ),
                         Expanded(
                           flex: 1,
                           child: Obx(
-                            () => PreviewPanel(
-                              archive: true,
+                            () => LessonPreviewPanel(
                               controller: controller,
-                              summative: controller.selectedSummative.value,
+                              lesson: controller.selectedLesson.value,
                             ),
                           ),
                         ),

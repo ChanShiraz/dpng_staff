@@ -1,5 +1,6 @@
 import 'package:dpng_staff/features/course/widgets/summatives_shimmer.dart';
 import 'package:dpng_staff/features/district_summative_library/widgets/summative_card.dart';
+import 'package:dpng_staff/features/rubric_creation/steps/step5_rubric_levels.dart';
 import 'package:dpng_staff/features/summative_assignment/controller/summative_assingnment_controller.dart';
 import 'package:dpng_staff/features/summative_assignment/widgets/summative_section.dart';
 import 'package:flutter/material.dart';
@@ -89,6 +90,22 @@ class StudentsSection extends StatelessWidget {
                     }),
                   ),
           ),
+          Obx(
+            () => controller.assingSummativeError.value.isNotEmpty
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RoundContainer(
+                      child: Row(
+                        children: [
+                          Icon(Icons.error_outline, color: Colors.red),
+                          SizedBox(width: 10),
+                          Text(controller.assingSummativeError.value),
+                        ],
+                      ),
+                    ),
+                  )
+                : SizedBox(),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
             child: Row(
@@ -127,17 +144,14 @@ class SaveButton extends StatelessWidget {
         SizedBox(width: 10),
         Obx(
           () => ElevatedButton(
-            onPressed: controller.readyToAssign.value
-                ? () async {
-                    final controller =
-                        Get.find<SummativeAssingnmentController>();
-                    controller.assignSummative(
-                      aCid,
-                      controller.summative.dmod_sum_id,
-                      context,
-                    );
-                  }
-                : null,
+            onPressed: () async {
+              final controller = Get.find<SummativeAssingnmentController>();
+              controller.assignSummative(
+                aCid,
+                controller.summative.dmod_sum_id,
+                context,
+              );
+            },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
             child: controller.assingingSummative.value
                 ? Padding(

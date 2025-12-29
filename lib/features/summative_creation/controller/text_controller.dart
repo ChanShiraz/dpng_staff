@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dpng_staff/features/assess_summative/widgets/text_dialog.dart';
 import 'package:dpng_staff/features/summative_creation/models/resource_row_data.dart';
 import 'package:dpng_staff/features/summative_creation/widgets/resource_section.dart';
 import 'package:flutter/widgets.dart';
@@ -7,7 +10,7 @@ import 'package:get/get.dart';
 class TextController extends GetxController {
   final descriptionController = TextEditingController();
   // final textController = TextEditingController();
-  final QuillController quillController = QuillController.basic();
+  QuillController quillController = QuillController.basic();
 
   ResourceRowData getLinkResource({int? editingId}) {
     return ResourceRowData(
@@ -15,12 +18,16 @@ class TextController extends GetxController {
       id: editingId ?? DateTime.now().microsecondsSinceEpoch,
       description: descriptionController.text,
       type: 4,
-      value: quillController.plainTextEditingValue.text,
+      value: jsonEncode(quillController.document.toDelta().toJson()),
     );
   }
 
   void setValues(ResourceRowData data) {
     descriptionController.text = data.description;
-    // quillController. = data.value;
+    // Source - https://stackoverflow.com/a
+    // Posted by Mubashir Saeed, modified by community. See post 'Timeline' for change history
+    // Retrieved 2025-12-29, License - CC BY-SA 4.0
+
+    quillController = buildController(data.value);
   }
 }

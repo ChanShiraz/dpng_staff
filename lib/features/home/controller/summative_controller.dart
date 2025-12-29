@@ -42,12 +42,10 @@ class SummativeController extends GetxController {
           .eq('assessed_by', currentUser!.userId!)
           .eq('alt_courses.active', 1)
           .eq('learning_year', Get.find<UserController>().learningYear.value)
-      .gte('date', DateHelper.weekStart())
-      .lte('date', DateHelper.weekEnd())
-      ;
+          .gte('date', DateHelper.weekStart())
+          .lte('date', DateHelper.weekEnd());
 
       final xResponse = await xQuery;
-      print('xResponse $xResponse');
       y = xResponse.length;
       x = 0;
       for (var element in xResponse) {

@@ -83,54 +83,55 @@ class ContentPresentationSection extends StatelessWidget {
                 ),
               ),
 
-              Obx(
-                () => controller.lessonTools.isNotEmpty
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black,
-                            ),
-                            onPressed: () {
-                              controller.insertLessonTool();
-                            },
-                            child: controller.insertingTools.value
-                                ? Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 14,
-                                    ),
-                                    child: SizedBox(
-                                      height: 20,
-                                      width: 20,
-                                      child: CircularProgressIndicator(
-                                        color: Colors.white,
-                                        strokeWidth: 3,
-                                      ),
-                                    ),
-                                  )
-                                : controller.lessonToolsInserted.value
-                                ? Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Icon(Icons.check, color: Colors.white),
-                                      SizedBox(width: 5),
-                                      Text(
-                                        'Saved',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ],
-                                  )
-                                : Text(
-                                    'Save',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                          ),
-                        ),
-                      )
-                    : SizedBox(),
-              ),
+              // Obx(
+              //   () => controller.lessonTools.isNotEmpty
+              //       ?
+              //       Padding(
+              //           padding: const EdgeInsets.only(top: 5),
+              //           child: Align(
+              //             alignment: Alignment.bottomRight,
+              //             child: ElevatedButton(
+              //               style: ElevatedButton.styleFrom(
+              //                 backgroundColor: Colors.black,
+              //               ),
+              //               onPressed: () {
+              //                 controller.insertLessonTool();
+              //               },
+              //               child: controller.insertingTools.value
+              //                   ? Padding(
+              //                       padding: const EdgeInsets.symmetric(
+              //                         horizontal: 14,
+              //                       ),
+              //                       child: SizedBox(
+              //                         height: 20,
+              //                         width: 20,
+              //                         child: CircularProgressIndicator(
+              //                           color: Colors.white,
+              //                           strokeWidth: 3,
+              //                         ),
+              //                       ),
+              //                     )
+              //                   : controller.lessonToolsInserted.value
+              //                   ? Row(
+              //                       mainAxisSize: MainAxisSize.min,
+              //                       children: [
+              //                         Icon(Icons.check, color: Colors.white),
+              //                         SizedBox(width: 5),
+              //                         Text(
+              //                           'Saved',
+              //                           style: TextStyle(color: Colors.white),
+              //                         ),
+              //                       ],
+              //                     )
+              //                   : Text(
+              //                       'Save',
+              //                       style: TextStyle(color: Colors.white),
+              //                     ),
+              //             ),
+              //           ),
+              //         )
+              //       : SizedBox(),
+              // ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Divider(),

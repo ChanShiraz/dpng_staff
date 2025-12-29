@@ -75,14 +75,14 @@ class MaterialsSection extends StatelessWidget {
                 ),
               ),
 
-              Obx(
-                () => UploadButton(
-                  show: controller.lessonMaterials.isNotEmpty,
-                  onPress: () => controller.insertLessonMaterial(),
-                  isLoading: controller.insertingLessonMaterial.value,
-                  uploaded: controller.lessonMaterialInserted.value,
-                ),
-              ),
+              // Obx(
+              //   () => UploadButton(
+              //     show: controller.lessonMaterials.isNotEmpty,
+              //     onPress: () => controller.insertLessonMaterial(),
+              //     isLoading: controller.insertingLessonMaterial.value,
+              //     uploaded: controller.lessonMaterialInserted.value,
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15),
                 child: Divider(),
@@ -131,14 +131,14 @@ class MaterialsSection extends StatelessWidget {
                   },
                 ),
               ),
-              Obx(
-                () => UploadButton(
-                  show: controller.knowledges.isNotEmpty,
-                  onPress: () => controller.insertKnowledge(),
-                  isLoading: controller.insertingKnowledge.value,
-                  uploaded: controller.knowledgeInserted.value,
-                ),
-              ),
+              // Obx(
+              //   () => UploadButton(
+              //     show: controller.knowledges.isNotEmpty,
+              //     onPress: () => controller.insertKnowledge(),
+              //     isLoading: controller.insertingKnowledge.value,
+              //     uploaded: controller.knowledgeInserted.value,
+              //   ),
+              // ),
 
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 15),
@@ -187,14 +187,14 @@ class MaterialsSection extends StatelessWidget {
                   },
                 ),
               ),
-              Obx(
-                () => UploadButton(
-                  show: controller.differentials.isNotEmpty,
-                  onPress: () => controller.insertDifferential(),
-                  isLoading: controller.insertingDifferential.value,
-                  uploaded: controller.differentialInserted.value,
-                ),
-              ),
+              // Obx(
+              //   () => UploadButton(
+              //     show: controller.differentials.isNotEmpty,
+              //     onPress: () => controller.insertDifferential(),
+              //     isLoading: controller.insertingDifferential.value,
+              //     uploaded: controller.differentialInserted.value,
+              //   ),
+              // ),
             ],
           ),
         ),

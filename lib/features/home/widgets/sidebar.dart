@@ -5,6 +5,7 @@ import 'package:dpng_staff/features/chat/view/course_chat_page.dart';
 import 'package:dpng_staff/features/district_summative_library/view/district_summative_library_page.dart';
 import 'package:dpng_staff/features/grades/pages/grades_page.dart';
 import 'package:dpng_staff/features/lesson_builder/view/lesson_builder_page.dart';
+import 'package:dpng_staff/features/lesson_library/view/lesson_library_page.dart';
 import 'package:dpng_staff/features/rubric_creation/view/rubric_creation_page.dart';
 import 'package:dpng_staff/features/student_roster/view/student_roster_page.dart';
 import 'package:dpng_staff/features/summative_creation/view/summative_creation_page.dart';
@@ -90,6 +91,12 @@ class Sidebar extends StatelessWidget {
                   ),
                   SizedBox(height: 16),
                   _SidebarIcon(
+                    icon: Icons.menu_book_outlined,
+                    lable: 'Lesson Library',
+                    onTap: () => Get.to(LessonLibraryPage()),
+                  ),
+                  SizedBox(height: 16),
+                  _SidebarIcon(
                     icon: Icons.local_library_outlined,
                     lable: 'Summatives Library',
                     onTap: () => Get.to(DistrictSummativeLibraryPage()),
@@ -110,7 +117,7 @@ class Sidebar extends StatelessWidget {
                   _SidebarIcon(
                     lable: 'Grades Interface',
                     icon: Icons.grade_outlined,
-                    onTap: () => Get.to(GradesInterface()),
+                    onTap: () => Get.to(GradebookMain()),
                   ),
                   SizedBox(height: 16),
                   _SidebarIcon(

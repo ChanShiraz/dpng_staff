@@ -121,14 +121,14 @@ class FormativeAssessmentSection extends StatelessWidget {
                   },
                 ),
               ),
-              Obx(
-                () => UploadButton(
-                  show: controller.formatives.isNotEmpty,
-                  onPress: () => controller.insertFormative(),
-                  isLoading: controller.insertingFormative.value,
-                  uploaded: controller.formativeInserted.value,
-                ),
-              ),
+              // Obx(
+              //   () => UploadButton(
+              //     show: controller.formatives.isNotEmpty,
+              //     onPress: () => controller.insertFormative(),
+              //     isLoading: controller.insertingFormative.value,
+              //     uploaded: controller.formativeInserted.value,
+              //   ),
+              // ),
             ],
           ),
         ),

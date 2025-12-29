@@ -234,7 +234,7 @@ class ResourceTableRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _TypeChip(label: data.type == 2 ? 'Link' : 'Text'),
-                if (data.value.isNotEmpty)
+                if (data.type == 2 && data.value.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 6),
                     child: Text(
@@ -254,6 +254,7 @@ class ResourceTableRow extends StatelessWidget {
               children: [
                 OutlinedButton.icon(
                   onPressed: () {
+                    print('data type ${data.type}');
                     if (data.type == 2) {
                       final linkController = Get.put(LinkController());
                       linkController.setValues(data);
@@ -262,7 +263,8 @@ class ResourceTableRow extends StatelessWidget {
                         builder: (context) =>
                             SummativeLinkDialog(editId: data.id),
                       ).then((value) => Get.delete<LinkController>());
-                    } else if (data.type == 1) {
+                    } 
+                    else if (data.type == 4) {
                       final textController = Get.put(TextController());
                       textController.setValues(data);
                       showDialog(
@@ -308,4 +310,3 @@ class _TypeChip extends StatelessWidget {
     );
   }
 }
-
